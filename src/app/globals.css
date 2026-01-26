@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-page: #FBF8F4;
+  --color-card: #FFFFFF;
+  --color-border: #E8E3DD;
+  --color-accent: #F2B24C;
+  --color-accent-hover: #E6A23C;
+  --color-heading: #3B2F25;
+  --color-body: #6B5F55;
+  --color-muted: #9C9086;
+}
+
+body {
+  @apply bg-page text-body;
+}
+
+/* Ensure smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
