@@ -31,13 +31,13 @@ export default function Hero() {
           <div className="flex justify-center md:justify-end">
             <div className="relative w-full max-w-md">
               {/* Placeholder for illustration - using logo as placeholder for now */}
-              <div className="relative aspect-square bg-gradient-to-br from-accent/20 to-accent/5 rounded-2xl p-8 flex items-center justify-center">
+              <div className="relative aspect-square flex items-center justify-center">
                 <Image
                   src="/me.png"
                   alt="Portfolio illustration"
-                  width={300}
-                  height={300}
-                  className="object-contain"
+                  width={250}
+                  height={250}
+                  className="object-cover rounded-full"
                 />
               </div>
             </div>

@@ -12,9 +12,6 @@
     "lint:fix": "eslint --fix"
   },
   "devDependencies": {
-    "next": "^16.1.1",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "25.0.9",
     "@types/react": "19.2.9",
