@@ -56,7 +56,7 @@ export default function Footer() {
         {/* Copyright */}
         <div className="text-center pt-6 border-t border-border">
           <p className="text-muted text-sm">
-            © 2024 Eric Huang. All rights reserved.
+            © 2026 Eric Huang. All rights reserved.
           </p>
         </div>
       </div>
