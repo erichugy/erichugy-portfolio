@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+
 import { NAV_LINKS, SOCIAL_LINKS } from "@/lib/constants";
 
 export default function Footer() {
@@ -13,8 +14,8 @@ export default function Footer() {
             <Image
               src="/logo.png"
               alt="Logo"
-              width={50}
-              height={50}
+              width={40}
+              height={40}
               className="rounded"
             />
           </Link>
@@ -56,7 +57,7 @@ export default function Footer() {
         {/* Copyright */}
         <div className="text-center pt-6 border-t border-border">
           <p className="text-muted text-sm">
-            © 2026 Eric Huang. All rights reserved.
+            © 2024 Eric Huang. All rights reserved.
           </p>
         </div>
       </div>

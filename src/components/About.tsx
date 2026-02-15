@@ -9,16 +9,15 @@ export default function About() {
               About Me
             </h2>
             <p className="text-lg text-body leading-relaxed">
-              I'm a Software Developer with a Computer Science degree from McGill
-              University. I'm passionate about building full-stack applications
-              that solve real business problems, from AI-powered integrations to
-              scalable enterprise systems.
+              I&apos;m a passionate full stack developer with experience creating custom
+              websites and applications. I specialize in responsive design,
+              front-end development, and building sites that are both beautiful
+              and functional.
             </p>
             <p className="text-lg text-body leading-relaxed">
-              My experience spans ERP system development, distributed machine
-              learning research, and data engineering. I've built high-throughput
-              order pipelines, automated accounting workflows, and contributed to
-              non-profit logistics platforms through Hack4Impact.
+              With a strong foundation in computer science and a keen eye for
+              detail, I bring ideas to life through clean code and thoughtful
+              user experiences.
             </p>
           </div>
 
@@ -29,30 +28,25 @@ export default function About() {
             </h2>
             <ul className="space-y-4 mb-8">
               <li className="flex items-center gap-3 text-body text-lg">
+                <span className="text-accent text-2xl">🎨</span>
+                <span>Web Design</span>
+              </li>
+              <li className="flex items-center gap-3 text-body text-lg">
                 <span className="text-accent text-2xl">💻</span>
-                <span>Full-Stack Development (React, Node, TypeScript)</span>
+                <span>Front-End Development</span>
               </li>
               <li className="flex items-center gap-3 text-body text-lg">
-                <span className="text-accent text-2xl">🗄️</span>
-                <span>Database & API Design (PostgreSQL, REST)</span>
+                <span className="text-accent text-2xl">📱</span>
+                <span>Responsive Design</span>
               </li>
               <li className="flex items-center gap-3 text-body text-lg">
-                <span className="text-accent text-2xl">🤖</span>
-                <span>Machine Learning (RayLib, PyTorch, Scikit-Learn)</span>
-              </li>
-              <li className="flex items-center gap-3 text-body text-lg">
-                <span className="text-accent text-2xl">☁️</span>
-                <span>Cloud & DevOps (Docker, AWS, Azure)</span>
+                <span className="text-accent text-2xl">⚡</span>
+                <span>Performance Optimization</span>
               </li>
             </ul>
-            <a
-              href="/Eric_Huang_Software.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-accent hover:bg-accent-hover text-white px-6 py-2 rounded-lg transition-colors font-medium w-full block text-center"
-            >
-              View Resume
-            </a>
+            <button className="bg-accent hover:bg-accent-hover text-white px-6 py-2 rounded-lg transition-colors font-medium w-full">
+              Learn More
+            </button>
           </div>
         </div>
       </div>

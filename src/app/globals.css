@@ -19,3 +19,20 @@ body {
 html {
   scroll-behavior: smooth;
 }
+
+@keyframes keyword-progress-slide {
+  0% {
+    transform: translateX(-45%);
+  }
+  100% {
+    transform: translateX(160%);
+  }
+}
+
+.keyword-progress-indeterminate {
+  width: 40%;
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #e6a23c 0%, #f2b24c 100%);
+  animation: keyword-progress-slide 1.2s ease-in-out infinite;
+}

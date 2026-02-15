@@ -13,5 +13,10 @@
 
 .next
 node_modules
+.tmp
 
 next-env.d.ts
+.claude
+.cursor
+CLAUDE.md
+WARP.md

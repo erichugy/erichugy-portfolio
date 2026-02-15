@@ -1,0 +1,242 @@
+.scene {
+  --rose: #f6547f;
+  --paper: #fff9f3;
+  --paper-edge: #f7e5d4;
+  --ink: #43253a;
+  --ink-soft: #7b5268;
+  --sky: #d6f1ff;
+  min-height: 100svh;
+  background:
+    radial-gradient(circle at 15% 25%, #fff1ca 0%, rgb(255 241 202 / 0%) 38%),
+    radial-gradient(circle at 80% 12%, #ffd6f0 0%, rgb(255 214 240 / 0%) 43%),
+    linear-gradient(160deg, #ffeef4 0%, #fff8e9 52%, #f1fdff 100%);
+  color: var(--ink);
+  overflow: hidden;
+  position: relative;
+}
+
+.glowA,
+.glowB {
+  border-radius: 999px;
+  filter: blur(45px);
+  opacity: 0.45;
+  pointer-events: none;
+  position: absolute;
+}
+
+.glowA {
+  background: #ff6a95;
+  height: 210px;
+  left: -60px;
+  top: 16%;
+  width: 210px;
+}
+
+.glowB {
+  background: #6dd8ff;
+  bottom: 10%;
+  height: 230px;
+  right: -80px;
+  width: 230px;
+}
+
+.cardArea {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  justify-content: center;
+  min-height: 100svh;
+  padding: clamp(1rem, 4vw, 2rem);
+}
+
+.pageHeader {
+  text-align: center;
+}
+
+.title {
+  color: var(--ink);
+  font-family: "Dancing Script", "Snell Roundhand", "Apple Chancery", cursive;
+  font-size: clamp(2rem, 4.5vw, 3.1rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.subtitle {
+  color: var(--ink-soft);
+  font-family: "Avenir Next", Avenir, "Trebuchet MS", sans-serif;
+  font-size: 10pt;
+  margin: 0.25rem 0 0;
+}
+
+.book {
+  aspect-ratio: 4 / 5.3;
+  max-height: min(64svh, 560px);
+  max-width: min(88vw, 600px);
+  perspective: 1800px;
+  position: relative;
+  transform: translateX(0);
+  transition: transform 520ms cubic-bezier(0.24, 0.84, 0.3, 1);
+  width: clamp(260px, 68vw, 600px);
+}
+
+.bookSpread {
+  transform: translateX(clamp(72px, 17vw, 300px));
+}
+
+.sheet {
+  cursor: default;
+  inset: 0;
+  position: absolute;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: transform 700ms cubic-bezier(0.24, 0.84, 0.3, 1);
+}
+
+.sheetTurned {
+  transform: rotateY(-179.8deg);
+}
+
+.face {
+  backface-visibility: hidden;
+  border: 1px solid var(--paper-edge);
+  border-radius: clamp(0.7rem, 1.2vw, 1.2rem);
+  box-shadow:
+    0 10px 30px rgb(52 20 43 / 0.14),
+    inset 0 0 0 1px rgb(255 255 255 / 0.6);
+  inset: 0;
+  overflow: hidden;
+  position: absolute;
+}
+
+.frontFace {
+  background: linear-gradient(170deg, #f8fdff 0%, #ffe9f2 100%);
+}
+
+.backFace {
+  background: linear-gradient(180deg, var(--paper) 0%, #ffefe3 100%);
+  transform: rotateY(180deg);
+}
+
+.coverLayout {
+  align-items: center;
+  background:
+    radial-gradient(circle at 22% 20%, #ffffff 0%, rgb(255 255 255 / 0%) 35%),
+    radial-gradient(circle at 85% 92%, rgb(255 95 135 / 0.38) 0%, rgb(255 95 135 / 0%) 30%),
+    linear-gradient(165deg, #84dbff 0%, #7fd0ff 48%, #78bff7 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  height: 100%;
+  justify-content: center;
+  padding: 0.15rem;
+}
+
+.coverArt {
+  filter: drop-shadow(0 9px 14px rgb(48 36 32 / 0.3));
+  height: min(97%, 700px);
+  object-fit: contain;
+  width: min(99%, 680px);
+}
+
+.pageContent {
+  background:
+    radial-gradient(circle at 100% 100%, rgb(246 84 127 / 0.11) 0%, rgb(246 84 127 / 0%) 35%),
+    linear-gradient(160deg, #fff8f2 0%, #fffef8 55%, #f2fcff 100%);
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  position: relative;
+  text-align: center;
+}
+
+.pageTitle {
+  font-family: "Dancing Script", "Snell Roundhand", "Apple Chancery", cursive;
+  font-size: clamp(1.8rem, 4.4vw, 2.9rem);
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+
+.pageBody {
+  color: #6f5465;
+  font-family: "Avenir Next", Avenir, "Trebuchet MS", sans-serif;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.75;
+  margin: 0 auto;
+  max-width: 37ch;
+}
+
+.pageCorner {
+  bottom: 1rem;
+  color: var(--rose);
+  font-size: 0.88rem;
+  letter-spacing: 0.09em;
+  margin: 0;
+  position: absolute;
+  right: 1.15rem;
+  text-transform: uppercase;
+}
+
+.leftPageSurface {
+  background:
+    radial-gradient(circle at 82% 16%, rgb(240 249 255 / 0.45) 0%, rgb(240 249 255 / 0%) 40%),
+    linear-gradient(165deg, #fffef8 0%, #fff8f2 55%, #f4fbff 100%);
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
+
+.leftPageImage {
+  object-fit: cover;
+}
+
+.leftHitZone,
+.rightHitZone {
+  background: transparent;
+  border: 0;
+  bottom: 0;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  width: 50%;
+  z-index: 500;
+}
+
+.leftHitZone {
+  left: 0;
+}
+
+.leftHitZoneSpread {
+  left: -100%;
+  width: 100%;
+}
+
+.leftHitZone:disabled,
+.rightHitZone:disabled {
+  cursor: default;
+}
+
+.rightHitZone {
+  right: 0;
+}
+
+@media (max-width: 560px) {
+  .cardArea {
+    justify-content: flex-start;
+    padding-top: 1.5rem;
+  }
+
+  .book {
+    max-height: none;
+    width: min(84vw, 340px);
+  }
+
+  .bookSpread {
+    transform: translateX(clamp(20px, 8vw, 84px));
+  }
+}

@@ -4,34 +4,23 @@ interface Project {
   title: string;
   description: string;
   image: string;
-  tags: string[];
-  link?: string;
 }
 
 const PROJECTS: Project[] = [
   {
-    title: "Welcome Collective",
-    description:
-      "A logistics management web app for a non-profit, optimizing pickup and delivery routes to serve over 100 clients daily.",
-    image: "/project-welcome-collective.png",
-    tags: ["TypeScript", "React", "Node.js", "PostgreSQL"],
-    link: '',
+    title: "Business Website",
+    description: "A professional website designed for a growing company to showcase their services and connect with customers.",
+    image: "/inspiration.png", // Placeholder - will use actual project images later
   },
   {
-    title: "123Loadboard - CodeJams",
-    description:
-      "A recommendation algorithm for truck drivers to optimize deliveries and maximize profit using predictive ML models.",
-    image: "/project-loadboard.png",
-    tags: ["Python", "Flutter", "Scikit-Learn", "FastAPI"],
-    link: '',
+    title: "E-commerce Site",
+    description: "A fully functional online store built for a fashion brand with seamless checkout and inventory management.",
+    image: "/inspiration.png",
   },
   {
-    title: "Stroke Prediction AI",
-    description:
-      "An AI program using TensorFlow and machine learning to predict stroke likelihood from patient health data.",
-    image: "/project-stroke-ai.png",
-    tags: ["Python", "TensorFlow", "Pandas", "ML"],
-    link: '',
+    title: "Portfolio Website",
+    description: "A creative and visually appealing portfolio website for a photographer to display their work.",
+    image: "/inspiration.png",
   },
 ];
 
@@ -71,29 +60,12 @@ export default function FeaturedProjects() {
                 <h3 className="text-xl font-semibold text-heading mb-2">
                   {project.title}
                 </h3>
-                <p className="text-body mb-3 leading-relaxed">
+                <p className="text-body mb-4 leading-relaxed">
                   {project.description}
                 </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-xs bg-border text-body px-2 py-1 rounded"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                {project.link && (
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-accent hover:bg-accent-hover text-white px-6 py-2 rounded-lg transition-colors font-medium inline-block"
-                  >
-                    View Project
-                  </a>
-                )}
+                <button className="bg-accent hover:bg-accent-hover text-white px-6 py-2 rounded-lg transition-colors font-medium">
+                  View Project
+                </button>
               </div>
             </div>
           ))}
