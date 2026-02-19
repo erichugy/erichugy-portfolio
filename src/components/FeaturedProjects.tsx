@@ -86,7 +86,7 @@ const getCardPosition = (
   return "hidden";
 };
 
-export default function FeaturedProjects(): JSX.Element {
+export default function FeaturedProjects(): React.JSX.Element {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isPaused, setIsPaused] = useState<boolean>(false);
 
