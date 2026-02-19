@@ -147,11 +147,10 @@ export default function FeaturedProjects(): React.JSX.Element {
               );
 
               return (
-                <button
+                <a
                   key={project.title}
-                  type="button"
-                  onClick={() => setActiveIndex(index)}
-                  aria-label={`Show ${project.title}`}
+                  href={project.primaryCtaHref}
+                  aria-label={`View ${project.title}`}
                   className={`absolute left-0 right-0 top-1/2 mx-auto w-[min(80vw,20rem)] min-[536px]:w-[56%] max-w-[28rem] aspect-square -translate-y-1/2 overflow-hidden rounded-[1.75rem] border border-border transition-all duration-500 ease-out ${
                     CARD_POSITION_CLASSNAME[position]
                   }`}
@@ -167,7 +166,7 @@ export default function FeaturedProjects(): React.JSX.Element {
                       sizes="(max-width: 640px) 80vw, 320px"
                     />
                   </div>
-                </button>
+                </a>
               );
             })}
           </div>
