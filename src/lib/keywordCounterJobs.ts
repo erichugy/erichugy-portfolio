@@ -74,7 +74,9 @@ if (!globalState.__keywordCounterCleanupTimer) {
       const age = now - new Date(job.updatedAt).getTime();
       if (isFinished && age > JOB_TTL_MS) {
         jobs.delete(id);
-        fs.rm(job.outputDir, { recursive: true, force: true }).catch(() => {});
+        fs.rm(job.outputDir, { recursive: true, force: true }).catch((err) => {
+          console.warn(`Failed to clean up job output directory ${job.outputDir}:`, err);
+        });
       }
     }
   }, JOB_CLEANUP_INTERVAL_MS);
