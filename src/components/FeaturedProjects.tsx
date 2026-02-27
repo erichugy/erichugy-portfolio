@@ -146,27 +146,47 @@ export default function FeaturedProjects(): React.JSX.Element {
                 PROJECTS.length,
               );
 
-              return (
-                <a
-                  key={project.title}
-                  href={project.primaryCtaHref}
-                  aria-label={`View ${project.title}`}
-                  className={`absolute left-0 right-0 top-1/2 mx-auto w-[min(80vw,20rem)] min-[536px]:w-[56%] max-w-[28rem] aspect-square -translate-y-1/2 overflow-hidden rounded-[1.75rem] border border-border transition-all duration-500 ease-out ${
-                    CARD_POSITION_CLASSNAME[position]
-                  }`}
+              const cardClassName = `absolute left-0 right-0 top-1/2 mx-auto w-[min(80vw,20rem)] min-[536px]:w-[56%] max-w-[28rem] aspect-square -translate-y-1/2 overflow-hidden rounded-[1.75rem] border border-border transition-all duration-500 ease-out ${
+                CARD_POSITION_CLASSNAME[position]
+              }`;
+
+              const cardContent = (
+                <div
+                  className={`relative w-full h-full ${project.imageBackgroundClassName}`}
                 >
-                  <div
-                    className={`relative w-full h-full ${project.imageBackgroundClassName}`}
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 80vw, 320px"
+                  />
+                </div>
+              );
+
+              if (position === "active") {
+                return (
+                  <a
+                    key={project.title}
+                    href={project.primaryCtaHref}
+                    aria-label={`View ${project.title}`}
+                    className={cardClassName}
                   >
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 640px) 80vw, 320px"
-                    />
-                  </div>
-                </a>
+                    {cardContent}
+                  </a>
+                );
+              }
+
+              return (
+                <button
+                  key={project.title}
+                  type="button"
+                  aria-label={`Show ${project.title}`}
+                  onClick={() => setActiveIndex(index)}
+                  className={cardClassName}
+                >
+                  {cardContent}
+                </button>
               );
             })}
           </div>
