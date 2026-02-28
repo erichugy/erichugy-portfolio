@@ -1,23 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  --color-page: #FBF8F4;
+  --color-page: #FAF8F5;
   --color-card: #FFFFFF;
-  --color-border: #E8E3DD;
-  --color-accent: #F2B24C;
-  --color-accent-hover: #E6A23C;
-  --color-heading: #3B2F25;
-  --color-body: #6B5F55;
-  --color-muted: #9C9086;
+  --color-border: #E8E2DA;
+  --color-accent: #E8A838;
+  --color-accent-hover: #D4962E;
+  --color-heading: #2C2218;
+  --color-body: #5C5248;
+  --color-muted: #8C8478;
 }
 
 body {
-  @apply bg-page text-body;
+  @apply bg-page text-body antialiased;
 }
 
 /* Ensure smooth scrolling for anchor links */
 html {
   scroll-behavior: smooth;
+}
+
+/* Tighten heading letter-spacing globally */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
 }
 
 @keyframes keyword-progress-slide {
@@ -33,6 +38,6 @@ html {
   width: 40%;
   height: 100%;
   border-radius: 9999px;
-  background: linear-gradient(90deg, #e6a23c 0%, #f2b24c 100%);
+  background: linear-gradient(90deg, #D4962E 0%, #E8A838 100%);
   animation: keyword-progress-slide 1.2s ease-in-out infinite;
 }

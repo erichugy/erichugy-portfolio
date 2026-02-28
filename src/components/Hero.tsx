@@ -2,36 +2,38 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <section className="px-6 py-16 md:py-24 lg:py-32 bg-page">
+    <section className="px-6 py-20 md:py-28 lg:py-36 bg-page">
       <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Content */}
-          <div className="space-y-6">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-heading leading-tight">
+          <div className="space-y-5">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-heading leading-[1.08]">
               Hello, I&apos;m{" "}
               <span className="text-accent">Eric Huang</span>
             </h1>
 
-            <h2 className="text-xl md:text-2xl text-heading font-semibold">
+            <h2 className="text-lg md:text-xl text-muted font-medium tracking-wide uppercase">
               Full Stack Developer
             </h2>
 
-            <p className="text-lg text-body leading-relaxed max-w-lg">
+            <p className="text-base md:text-lg text-body leading-relaxed max-w-lg">
               I&apos;m a full stack developer with a passion for building efficient,
               user-friendly websites and applications. Let&apos;s work together to
               bring your vision to life.
             </p>
 
-            <button className="bg-accent hover:bg-accent-hover text-white px-8 py-3 rounded-lg transition-colors font-medium text-lg">
-              View My Work
-            </button>
+            <div className="pt-2">
+              <button className="bg-accent hover:bg-accent-hover text-white px-6 py-2.5 rounded-[10px] transition-all hover:shadow-md font-semibold text-sm">
+                View My Work
+              </button>
+            </div>
           </div>
 
           {/* Right Illustration */}
           <div className="flex justify-center md:justify-end">
             <div className="relative w-full max-w-md">
               {/* Placeholder for illustration - using logo as placeholder for now */}
-              <div className="relative aspect-square bg-gradient-to-br from-accent/20 to-accent/5 rounded-2xl p-8 flex items-center justify-center">
+              <div className="relative aspect-square bg-gradient-to-br from-accent/15 to-accent/5 rounded-[1.25rem] p-8 flex items-center justify-center border border-border/50">
                 <Image
                   src="/me.png"
                   alt="Portfolio illustration"
