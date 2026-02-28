@@ -12,9 +12,9 @@ export default function Navbar() {
           <Image
             src="/logo.png"
             alt="Eric Huang logo"
-            width={112}
-            height={112}
-            className="size-16 rounded-xl md:size-20 lg:size-24"
+            width={1024}
+            height={1536}
+            className="h-24 w-auto rounded-xl md:h-[8rem] lg:h-[9rem] object-contain"
             priority
           />
         </Link>
@@ -24,7 +24,7 @@ export default function Navbar() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-sm font-medium font-mono text-body transition-colors hover:text-heading lg:text-[0.938rem]"
+                className="text-base font-medium font-mono text-body transition-colors hover:text-heading lg:text-lg"
               >
                 {link.label}
               </Link>
@@ -36,7 +36,7 @@ export default function Navbar() {
           <ThemeToggle />
           <Link
             href="/#contact"
-            className="rounded-[10px] bg-accent px-4 py-2 text-sm font-semibold text-accent-text transition-all hover:bg-accent-hover hover:shadow-md md:px-5 md:py-2 md:text-sm lg:px-6 lg:py-2.5"
+            className="rounded-[10px] bg-accent px-5 py-2 text-base font-semibold text-accent-text transition-all hover:bg-accent-hover hover:shadow-md md:px-6 md:py-2.5 lg:px-7 lg:py-3 lg:text-lg"
           >
             Hire Me
           </Link>
