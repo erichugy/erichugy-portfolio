@@ -25,7 +25,7 @@ export default function About() {
           </div>
 
           {/* Right Column - Skills Card */}
-          <div className="card-glow bg-card rounded-xl border border-border p-6 md:p-8 shadow-[0_2px_8px_rgba(44,34,24,0.06)]">
+          <div className="card-glow bg-card rounded-xl border border-border p-6 md:p-8 shadow-[0_2px_8px_rgba(12,27,33,0.06)]">
             <h2 className="text-2xl md:text-3xl font-bold text-heading mb-5">
               My Skills
             </h2>
@@ -47,7 +47,7 @@ export default function About() {
                 <span>Performance Optimization</span>
               </li>
             </ul>
-            <button className="bg-accent hover:bg-accent-hover text-white px-5 py-2.5 rounded-[10px] transition-all hover:shadow-md font-semibold text-sm w-full">
+            <button className="bg-accent hover:bg-accent-hover text-accent-text px-5 py-2.5 rounded-[10px] transition-all hover:shadow-md font-semibold text-sm w-full">
               Learn More
             </button>
           </div>

@@ -57,11 +57,11 @@ type CardPosition = "active" | "previous" | "next" | "hidden";
 
 const CARD_POSITION_CLASSNAME: Record<CardPosition, string> = {
   active:
-    "z-30 translate-x-0 scale-100 opacity-100 shadow-[0_20px_40px_rgba(44,34,24,0.18)]",
+    "z-30 translate-x-0 scale-100 opacity-100 shadow-[0_20px_40px_rgba(12,27,33,0.18)]",
   previous:
-    "z-20 -translate-x-[34%] scale-[0.9] opacity-90 shadow-[0_14px_30px_rgba(44,34,24,0.12)] max-[535px]:translate-x-0 max-[535px]:opacity-0 max-[535px]:pointer-events-none",
+    "z-20 -translate-x-[34%] scale-[0.9] opacity-90 shadow-[0_14px_30px_rgba(12,27,33,0.12)] max-[535px]:translate-x-0 max-[535px]:opacity-0 max-[535px]:pointer-events-none",
   next:
-    "z-20 translate-x-[34%] scale-[0.9] opacity-90 shadow-[0_14px_30px_rgba(44,34,24,0.12)] max-[535px]:translate-x-0 max-[535px]:opacity-0 max-[535px]:pointer-events-none",
+    "z-20 translate-x-[34%] scale-[0.9] opacity-90 shadow-[0_14px_30px_rgba(12,27,33,0.12)] max-[535px]:translate-x-0 max-[535px]:opacity-0 max-[535px]:pointer-events-none",
   hidden: "z-10 scale-[0.75] opacity-0 pointer-events-none",
 };
 
@@ -177,7 +177,7 @@ export default function FeaturedProjects(): React.JSX.Element | null {
             })}
           </div>
 
-          <div className="card-glow relative mt-8 rounded-xl border border-border bg-card p-5 md:p-7 shadow-[0_2px_8px_rgba(44,34,24,0.06)]">
+          <div className="card-glow relative mt-8 rounded-xl border border-border bg-card p-5 md:p-7 shadow-[0_2px_8px_rgba(12,27,33,0.06)]">
             <div className="pointer-events-none absolute left-4 right-4 top-4 flex justify-between">
               <button
                 type="button"
@@ -208,7 +208,7 @@ export default function FeaturedProjects(): React.JSX.Element | null {
               <div className="mt-5 flex flex-wrap justify-center gap-3 md:justify-start">
                 <Link
                   href={activeProject.primaryCtaHref}
-                  className="inline-flex items-center justify-center bg-accent hover:bg-accent-hover text-white px-5 py-2 rounded-[10px] transition-all hover:shadow-md font-semibold text-sm"
+                  className="inline-flex items-center justify-center bg-accent hover:bg-accent-hover text-accent-text px-5 py-2 rounded-[10px] transition-all hover:shadow-md font-semibold text-sm"
                 >
                   {activeProject.primaryCtaLabel}
                 </Link>

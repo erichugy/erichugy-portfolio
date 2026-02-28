@@ -13,7 +13,7 @@ export default function Hero() {
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-heading leading-[1.08]">
               Hello, I&apos;m{" "}
-              <span className="text-accent drop-shadow-[0_0_20px_rgba(240,180,74,0.15)]">
+              <span className="text-accent drop-shadow-[0_0_20px_rgba(14,165,201,0.2)]">
                 Eric Huang
               </span>
             </h1>
@@ -29,7 +29,7 @@ export default function Hero() {
             </p>
 
             <div className="pt-2">
-              <button className="bg-accent hover:bg-accent-hover text-white px-6 py-2.5 rounded-[10px] transition-all hover:shadow-md font-semibold text-sm">
+              <button className="bg-accent hover:bg-accent-hover text-accent-text px-6 py-2.5 rounded-[10px] transition-all hover:shadow-md font-semibold text-sm">
                 View My Work
               </button>
             </div>

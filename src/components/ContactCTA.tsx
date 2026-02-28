@@ -14,7 +14,7 @@ export default function ContactCTA() {
         <p className="text-base md:text-lg text-muted mb-8 max-w-xl mx-auto leading-relaxed">
           Have a project in mind? I&apos;d love to hear from you.
         </p>
-        <button className="bg-accent hover:bg-accent-hover text-white px-6 py-2.5 rounded-[10px] transition-all hover:shadow-md font-semibold text-sm">
+        <button className="bg-accent hover:bg-accent-hover text-accent-text px-6 py-2.5 rounded-[10px] transition-all hover:shadow-md font-semibold text-sm">
           Get in Touch
         </button>
       </div>

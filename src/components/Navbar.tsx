@@ -36,7 +36,7 @@ export default function Navbar() {
           <ThemeToggle />
           <Link
             href="/#contact"
-            className="rounded-[10px] bg-accent px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-accent-hover hover:shadow-md md:px-5 md:py-2 md:text-sm lg:px-6 lg:py-2.5"
+            className="rounded-[10px] bg-accent px-4 py-2 text-sm font-semibold text-accent-text transition-all hover:bg-accent-hover hover:shadow-md md:px-5 md:py-2 md:text-sm lg:px-6 lg:py-2.5"
           >
             Hire Me
           </Link>
