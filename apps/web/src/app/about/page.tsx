@@ -1,6 +1,7 @@
 import Activities from "@/components/Activities";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import EducationTimeline from "@/components/EducationTimeline";
 import WorkExperience from "@/components/WorkExperience";
 import { CERTIFICATIONS, LANGUAGES, SHOW_DATES, TECHNICAL_SKILLS } from "@/lib/about-data";
 
@@ -48,8 +49,8 @@ export default function AboutPage() {
         {/* Work Experience Timeline */}
         <WorkExperience />
 
-        {/* Education & Volunteer Timeline — placeholder until component is ready */}
-        {/* <EducationTimeline /> */}
+        {/* Education & Volunteer Timeline */}
+        <EducationTimeline />
 
         {/* Technical Skills */}
         <section className="px-6 py-20 md:py-28 bg-page-alt">
