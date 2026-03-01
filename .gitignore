@@ -17,3 +17,10 @@ next-env.d.ts
 .cursor
 CLAUDE.md
 WARP.md
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+*.egg-info/
