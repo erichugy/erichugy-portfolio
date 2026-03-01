@@ -23,7 +23,59 @@ export interface Activity {
   icon: string;
 }
 
+export interface Education {
+  school: string;
+  degree: string;
+  gpa: string;
+  coursework: string[];
+  clubs: string[];
+}
+
+export interface Language {
+  name: string;
+  level: string;
+  details: string;
+}
+
 // ── Data ───────────────────────────────────────────────────────────────────
+
+export const EDUCATION: Education = {
+  school: "McGill University",
+  degree: "Bachelor's in Computer Science, Minor in Management",
+  gpa: "3.85 / 4.00",
+  coursework: [
+    "Algorithms & Data Structures",
+    "Operating Systems",
+    "Database Systems",
+    "Applied Machine Learning",
+    "Information Retrieval",
+    "Software Systems",
+    "Discrete Mathematics",
+    "Probability & Statistics",
+  ],
+  clubs: ["GDSC", "MIC", "MBIA", "Hack4Impact", "Bolt Bootcamps"],
+};
+
+export const LANGUAGES: Language[] = [
+  {
+    name: "English",
+    level: "Native",
+    details: "Full professional proficiency",
+  },
+  {
+    name: "French",
+    level: "Advanced",
+    details: "Advanced reading, writing, and speaking",
+  },
+];
+
+export const TECHNICAL_SKILLS = {
+  languages: ["TypeScript", "JavaScript", "Python", "Bash", "HTML/CSS"],
+  backend: ["Node.js", "Bun", "Zod", "Express", "FastAPI", "Flask"],
+  frontend: ["React", "React Native", "Next.js", "Tailwind CSS"],
+  dataML: ["Pandas", "Matplotlib", "Scikit-Learn", "PyTorch"],
+  devOps: ["Docker", "Azure DevOps", "Git", "GitHub", "GitLab", "Jira", "Unix/Linux", "PostgreSQL"],
+};
 
 export const WORK_EXPERIENCES: WorkExperience[] = [
   {
