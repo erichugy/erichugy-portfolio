@@ -68,9 +68,11 @@ func (sr *statusRecorder) Flush() {
 	}
 }
 
-// Hijack implements http.Hijacker so WebSocket upgrades work.
-func (sr *statusRecorder) Hijack() (c interface{}, brw interface{}, err error) {
-	// We need the real Hijack signature; delegate via type assertion.
+// Hijack implements http.Hijacker so WebSocket upgrades work through the proxy.
+func (sr *statusRecorder) Hijack() (interface{}, interface{}, error) {
+	if hj, ok := sr.ResponseWriter.(http.Hijacker); ok {
+		return hj.Hijack()
+	}
 	return nil, nil, http.ErrNotSupported
 }
 
@@ -114,9 +116,26 @@ func (tb *tokenBucket) allow() bool {
 
 // RateLimitMiddleware enforces a simple in-memory token bucket per client IP.
 // Defaults: 100 requests burst, 10 requests/second refill.
+// Stale buckets are pruned every 5 minutes.
 func RateLimitMiddleware(next http.Handler) http.Handler {
 	var mu sync.Mutex
 	buckets := map[string]*tokenBucket{}
+
+	// Prune stale entries every 5 minutes to prevent unbounded memory growth.
+	go func() {
+		ticker := time.NewTicker(5 * time.Minute)
+		defer ticker.Stop()
+		for range ticker.C {
+			mu.Lock()
+			now := time.Now()
+			for ip, b := range buckets {
+				if now.Sub(b.lastRefill) > 10*time.Minute {
+					delete(buckets, ip)
+				}
+			}
+			mu.Unlock()
+		}
+	}()
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ip := clientIP(r)

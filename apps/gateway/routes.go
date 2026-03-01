@@ -61,8 +61,7 @@ func NewServiceProxy(prefix string, target *url.URL) http.Handler {
 				req.URL.Path = "/"
 			}
 
-			// Preserve raw query string.
-			req.URL.RawQuery = req.URL.RawQuery
+			req.URL.RawQuery = targetURL.RawQuery
 		},
 	}
 	return proxy
