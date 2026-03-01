@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { WORK_EXPERIENCES } from "@/lib/about-data";
+import { SHOW_DATES, WORK_EXPERIENCES } from "@/lib/about-data";
 
 function ChevronIcon({ expanded }: { expanded: boolean }) {
   return (
@@ -82,10 +82,12 @@ export default function WorkExperience() {
                           {exp.company}
                         </h3>
                         <p className="text-sm text-muted">
-                          {exp.position}{" "}
-                          <span className="font-mono text-xs">
-                            &middot; {exp.duration}
-                          </span>
+                          {exp.position}
+                          {SHOW_DATES && (
+                            <span className="font-mono text-xs">
+                              {" "}&middot; {exp.duration}
+                            </span>
+                          )}
                         </p>
                       </div>
                       <span className="text-muted flex-shrink-0">

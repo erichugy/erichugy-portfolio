@@ -1,3 +1,8 @@
+// ── Feature Flags ──────────────────────────────────────────────────────────
+
+/** Toggle to show/hide dates across all timeline components */
+export const SHOW_DATES = false;
+
 // ── Types ──────────────────────────────────────────────────────────────────
 
 export interface WorkExperience {
@@ -9,26 +14,35 @@ export interface WorkExperience {
   highlights: string[];
 }
 
-export interface VolunteerWork {
-  organization: string;
+export interface VolunteerEntry {
   role: string;
+  organization: string;
   duration: string;
   description: string;
-  techStack?: string[];
+}
+
+export interface EducationEntry {
+  school: string;
+  degree: string;
+  duration: string;
+  gpa?: string;
+  awards?: string[];
+  coursework?: string[];
+  clubs?: string[];
+  volunteer?: VolunteerEntry[];
+}
+
+export interface Certification {
+  name: string;
+  issuer: string;
+  date: string;
+  credentialId?: string;
 }
 
 export interface Activity {
   title: string;
   description: string;
   icon: string;
-}
-
-export interface Education {
-  school: string;
-  degree: string;
-  gpa: string;
-  coursework: string[];
-  clubs: string[];
 }
 
 export interface Language {
@@ -38,44 +52,6 @@ export interface Language {
 }
 
 // ── Data ───────────────────────────────────────────────────────────────────
-
-export const EDUCATION: Education = {
-  school: "McGill University",
-  degree: "Bachelor's in Computer Science, Minor in Management",
-  gpa: "3.85 / 4.00",
-  coursework: [
-    "Algorithms & Data Structures",
-    "Operating Systems",
-    "Database Systems",
-    "Applied Machine Learning",
-    "Information Retrieval",
-    "Software Systems",
-    "Discrete Mathematics",
-    "Probability & Statistics",
-  ],
-  clubs: ["GDSC", "MIC", "MBIA", "Hack4Impact", "Bolt Bootcamps"],
-};
-
-export const LANGUAGES: Language[] = [
-  {
-    name: "English",
-    level: "Native",
-    details: "Full professional proficiency",
-  },
-  {
-    name: "French",
-    level: "Advanced",
-    details: "Advanced reading, writing, and speaking",
-  },
-];
-
-export const TECHNICAL_SKILLS = {
-  languages: ["TypeScript", "JavaScript", "Python", "Bash", "HTML/CSS"],
-  backend: ["Node.js", "Bun", "Zod", "Express", "FastAPI", "Flask"],
-  frontend: ["React", "React Native", "Next.js", "Tailwind CSS"],
-  dataML: ["Pandas", "Matplotlib", "Scikit-Learn", "PyTorch"],
-  devOps: ["Docker", "Azure DevOps", "Git", "GitHub", "GitLab", "Jira", "Unix/Linux", "PostgreSQL"],
-};
 
 export const WORK_EXPERIENCES: WorkExperience[] = [
   {
@@ -132,24 +108,124 @@ export const WORK_EXPERIENCES: WorkExperience[] = [
   },
 ];
 
-export const VOLUNTEER_WORK: VolunteerWork[] = [
+export const EDUCATION_ENTRIES: EducationEntry[] = [
   {
-    organization: "Hack4Impact McGill — Welcome Collective",
-    role: "Full Stack Developer",
-    duration: "Sep 2024 - May 2025",
-    description:
-      "Engineered a logistics routing engine using A* to optimize donation pick-up/delivery schedules, enabling managers to coordinate routes for 100+ daily clients. Designed a PostgreSQL schema to manage real-time inventory and client data, improving item allocation accuracy by 40%.",
-    techStack: ["TypeScript", "React", "Node.js", "Express", "Docker", "PostgreSQL"],
+    school: "McGill University",
+    degree: "Bachelor of Science in Computer Science, Minor in Management",
+    duration: "Sep 2021 - May 2025",
+    gpa: "3.85 / 4.00",
+    awards: [
+      "Recipient of McGill Entrance Scholarship (academic excellence)",
+    ],
+    coursework: [
+      "Algorithms & Data Structures",
+      "Operating Systems",
+      "Database Systems",
+      "Applied Machine Learning",
+      "Information Retrieval",
+      "Software Systems",
+      "Discrete Mathematics",
+      "Probability & Statistics",
+    ],
+    clubs: ["Hack4Impact", "GDSC", "BOLT Bootcamps", "MBIA", "MIC"],
+    volunteer: [
+      {
+        role: "Full Stack Developer",
+        organization: "Hack4Impact McGill — Welcome Collective",
+        duration: "Sep 2024 - May 2025",
+        description:
+          "Engineered a logistics routing engine using A* to optimize donation pick-up/delivery schedules for 100+ daily clients. Designed a PostgreSQL schema improving item allocation accuracy by 40%.",
+      },
+      {
+        role: "VP External",
+        organization: "Google Developer Student Clubs (GDSC) McGill",
+        duration: "Aug 2023 - May 2024",
+        description:
+          "Made Google technologies accessible to students via workshops. Connected students to professionals via networking sessions.",
+      },
+      {
+        role: "Director of Technology",
+        organization: "BOLT Bootcamps",
+        duration: "Sep 2021 - May 2024",
+        description:
+          "Increased competing teams by over 250% through cross-university outreach. Led 5 brainstorming/networking sessions connecting students with industry professionals.",
+      },
+      {
+        role: "Junior Analyst",
+        organization: "McGill Investment Club (MIC)",
+        duration: "Sep 2021 - May 2022",
+        description:
+          "Health Care team. Participated in 7 seminars on thesis development and financial valuation. Won a MIC stock pitch competition.",
+      },
+      {
+        role: "Mentee",
+        organization: "McGill Bankers International Association (MBIA)",
+        duration: "Sep 2021 - May 2022",
+        description:
+          "Connected with alumni in investment banking positions worldwide to develop a comprehensive understanding of the industry.",
+      },
+    ],
   },
   {
-    organization: "123Loadboard — CodeJams Hackathon",
-    role: "Developer",
-    duration: "Oct 2023",
-    description:
-      "Designed a recommendation algorithm for truck drivers to optimize deliveries and maximize profit. Developed predictive models using Random Forest Regression to estimate upcoming deliveries.",
-    techStack: ["Flutter", "Python", "MQTT", "Scikit-Learn", "Docker", "FastAPI"],
+    school: "National University of Singapore",
+    degree: "Exchange Semester — Computer Science",
+    duration: "Jan 2024 - May 2024",
   },
 ];
+
+export const CERTIFICATIONS: Certification[] = [
+  {
+    name: "NetSuite Certified SuiteFoundation",
+    issuer: "NetSuite",
+    date: "Aug 2024",
+    credentialId: "36226",
+  },
+  {
+    name: "Pandas",
+    issuer: "Kaggle",
+    date: "Oct 2023",
+  },
+  {
+    name: "Intro to Machine Learning",
+    issuer: "Kaggle",
+    date: "Oct 2023",
+  },
+  {
+    name: "Valuation 1: DCF Training",
+    issuer: "The Marquee Group",
+    date: "Oct 2021",
+  },
+];
+
+export const LANGUAGES: Language[] = [
+  {
+    name: "English",
+    level: "Native",
+    details: "Full professional proficiency",
+  },
+  {
+    name: "French",
+    level: "Advanced",
+    details: "Reading, writing, and speaking",
+  },
+];
+
+export const TECHNICAL_SKILLS = {
+  languages: ["TypeScript", "JavaScript", "Python", "Bash", "HTML/CSS"],
+  backend: ["Node.js", "Bun", "Zod", "Express", "FastAPI", "Flask"],
+  frontend: ["React", "React Native", "Next.js", "Tailwind CSS"],
+  dataML: ["Pandas", "Matplotlib", "Scikit-Learn", "PyTorch"],
+  devOps: [
+    "Docker",
+    "Azure DevOps",
+    "Git",
+    "GitHub",
+    "GitLab",
+    "Jira",
+    "Unix/Linux",
+    "PostgreSQL",
+  ],
+};
 
 export const ACTIVITIES: Activity[] = [
   {
