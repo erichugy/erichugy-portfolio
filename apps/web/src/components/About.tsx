@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function About() {
   return (
     <section id="about" className="px-6 py-20 md:py-28 bg-page">
@@ -47,9 +49,12 @@ export default function About() {
                 <span>Performance Optimization</span>
               </li>
             </ul>
-            <button className="bg-accent hover:bg-accent-hover text-accent-text px-5 py-2.5 rounded-[10px] transition-all hover:shadow-md font-semibold text-sm w-full">
+            <Link
+              href="/about"
+              className="bg-accent hover:bg-accent-hover text-accent-text px-5 py-2.5 rounded-[10px] transition-all hover:shadow-md font-semibold text-sm w-full block text-center"
+            >
               Learn More
-            </button>
+            </Link>
           </div>
         </div>
       </div>
