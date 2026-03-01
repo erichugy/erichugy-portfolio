@@ -16,8 +16,8 @@ export default function AboutPage() {
     <>
       <Navbar />
       <main>
-        {/* Hero / Intro */}
-        <section className="px-6 py-20 md:py-28 bg-page">
+        {/* Hero / Intro — extra top padding to clear sticky navbar */}
+        <section className="px-6 pt-32 pb-20 md:pt-40 md:pb-28 bg-page">
           <div className="max-w-3xl mx-auto">
             <p className="font-mono text-sm text-muted tracking-wide mb-3">
               {">"} about_me
