@@ -18,6 +18,13 @@ next-env.d.ts
 CLAUDE.md
 WARP.md
 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+*.egg-info/
+
 # Go
 bin/
 *.exe
