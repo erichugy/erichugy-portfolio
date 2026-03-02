@@ -263,6 +263,8 @@ export default function TradingBotPage() {
                     <button
                       type="button"
                       onClick={() => setArticlesExpanded(!articlesExpanded)}
+                      aria-expanded={articlesExpanded}
+                      aria-controls="articles-list"
                       className="w-full flex items-center justify-between px-4 py-3 text-heading font-semibold hover:bg-card transition-colors"
                     >
                       <span>
@@ -281,9 +283,9 @@ export default function TradingBotPage() {
                       </svg>
                     </button>
                     {articlesExpanded ? (
-                      <div className="divide-y divide-border">
+                      <div id="articles-list" className="divide-y divide-border">
                         {result.articles.map((article, index) => (
-                          <div key={index} className="px-4 py-3">
+                          <div key={article.url} className="px-4 py-3">
                             <div className="flex items-start justify-between gap-3">
                               <div className="min-w-0 flex-1">
                                 <a
