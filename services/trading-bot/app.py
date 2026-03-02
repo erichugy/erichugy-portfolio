@@ -50,8 +50,9 @@ def analyse_news(article_objs: List[Article], fast: bool = False):
         articles_detail.append(
             {
                 "title": title or article.headline,
-                "source": article.url,
+                "url": article.url,
                 "sentiment": sentiment_label,
+                "sentiment_score": round(score, 4),
             }
         )
 
@@ -136,8 +137,9 @@ def analyze():
         return jsonify({"error": str(e)}), 400
     except RuntimeError as e:
         return jsonify({"error": str(e)}), 500
-    except Exception as e:
-        return jsonify({"error": f"Internal server error: {e}"}), 500
+    except Exception:
+        app.logger.exception("Unhandled exception during /analyze request")
+        return jsonify({"error": "Internal server error"}), 500
 
 
 if __name__ == "__main__":

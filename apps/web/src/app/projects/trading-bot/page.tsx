@@ -284,7 +284,7 @@ export default function TradingBotPage() {
                     </button>
                     {articlesExpanded ? (
                       <div id="articles-list" className="divide-y divide-border">
-                        {result.articles.map((article, index) => (
+                        {result.articles.map((article) => (
                           <div key={article.url} className="px-4 py-3">
                             <div className="flex items-start justify-between gap-3">
                               <div className="min-w-0 flex-1">
