@@ -29,3 +29,6 @@ __pycache__/
 # Go
 bin/
 *.exe
+apps/gateway/gateway
+
+.ignore.me/
