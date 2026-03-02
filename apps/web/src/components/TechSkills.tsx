@@ -44,7 +44,7 @@ const SKILL_ICONS: Record<string, IconType> = {
   FastAPI: SiFastapi,
   Flask: SiFlask,
   React: SiReact,
-  "React Native": SiReact,
+
   "Next.js": SiNextdotjs,
   "Tailwind CSS": SiTailwindcss,
   Pandas: SiPandas,
