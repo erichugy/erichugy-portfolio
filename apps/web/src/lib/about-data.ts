@@ -213,7 +213,7 @@ export const LANGUAGES: Language[] = [
 export const TECHNICAL_SKILLS = {
   languages: ["TypeScript", "JavaScript", "Python", "Bash", "HTML/CSS"],
   backend: ["Node.js", "Bun", "Zod", "Express", "FastAPI", "Flask"],
-  frontend: ["React", "React Native", "Next.js", "Tailwind CSS"],
+  frontend: ["React", "Next.js", "Tailwind CSS"],
   dataML: ["Pandas", "Matplotlib", "Scikit-Learn", "PyTorch"],
   devOps: [
     "Docker",

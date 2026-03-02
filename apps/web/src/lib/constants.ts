@@ -6,8 +6,7 @@ export const NAV_LINKS = [
   { label: "Contact", href: "/#contact" },
 ] as const;
 
-// Social media links (placeholders for now)
 export const SOCIAL_LINKS = [
-  { name: "LinkedIn", href: "#", icon: "in" },
-  { name: "Twitter", href: "#", icon: "twitter" },
+  { name: "LinkedIn", href: "https://www.linkedin.com/in/erichugy/", icon: "in" },
+  { name: "GitHub", href: "https://github.com/erichugy/", icon: "github" },
 ] as const;
