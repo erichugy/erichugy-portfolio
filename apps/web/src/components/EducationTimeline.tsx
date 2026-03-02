@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { EDUCATION_ENTRIES, SHOW_DATES } from "@/lib/about-data";
+import { EDUCATION_ENTRIES } from "@/lib/about-data";
+import { SHOW_DATES } from "@/lib/feature-flags";
 
 function ChevronIcon({ expanded }: { expanded: boolean }) {
   return (
