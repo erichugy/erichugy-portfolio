@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useCallback, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { TECHNICAL_SKILLS } from "@/lib/about-data";
 import { IconType } from "react-icons";
 import {
@@ -99,17 +99,6 @@ export default function SkillsBubbleCanvas() {
   const sizeRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
 
   const [diameters, setDiameters] = useState<number[]>([]);
-
-  const computeScale = useCallback((containerWidth: number) => {
-    return Math.min(Math.max(containerWidth / 900, 0.6), 1.2);
-  }, []);
-
-  const computeRadius = useCallback(
-    (skillCount: number, scale: number) => {
-      return (BASE_RADIUS + skillCount * PER_SKILL_RADIUS) * scale;
-    },
-    []
-  );
 
   useEffect(() => {
     const container = containerRef.current;
@@ -214,6 +203,14 @@ export default function SkillsBubbleCanvas() {
         b.vx *= DAMPING;
         b.vy *= DAMPING;
 
+        // Inject small random nudge if nearly stopped
+        const speed = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
+        if (speed < 0.3) {
+          const angle = Math.random() * Math.PI * 2;
+          b.vx += Math.cos(angle) * 0.1;
+          b.vy += Math.sin(angle) * 0.1;
+        }
+
         // 2. Update position
         b.x += b.vx;
         b.y += b.vy;
@@ -306,7 +303,6 @@ export default function SkillsBubbleCanvas() {
       const scale = Math.min(Math.max(newW / 900, 0.6), 1.2);
 
       const bubbles = physicsRef.current;
-      const newDiameters: number[] = [];
 
       for (let i = 0; i < bubbles.length; i++) {
         const b = bubbles[i];
@@ -315,7 +311,6 @@ export default function SkillsBubbleCanvas() {
           scale;
         b.radius = newRadius;
         b.mass = newRadius * newRadius;
-        newDiameters.push(newRadius * 2);
 
         // Rescale positions proportionally
         if (oldW > 0) b.x = (b.x / oldW) * newW;
@@ -335,7 +330,6 @@ export default function SkillsBubbleCanvas() {
         }
       }
 
-      setDiameters(newDiameters);
     });
 
     observer.observe(container);
@@ -349,6 +343,8 @@ export default function SkillsBubbleCanvas() {
   return (
     <div
       ref={containerRef}
+      role="img"
+      aria-label="Technical skills: TypeScript, JavaScript, Python, React, Next.js, Docker, and more"
       className="relative w-full overflow-hidden rounded-2xl"
       style={{ height: "clamp(400px, 50vw, 600px)" }}
     >
@@ -362,7 +358,7 @@ export default function SkillsBubbleCanvas() {
             }}
             className="absolute rounded-full bg-card/80 backdrop-blur-sm border border-border
                        flex flex-col items-center justify-center gap-1 p-4
-                       select-none"
+                       select-none overflow-hidden"
             style={{
               width: diameter,
               height: diameter,
