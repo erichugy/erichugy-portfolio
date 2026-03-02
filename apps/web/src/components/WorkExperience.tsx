@@ -78,7 +78,7 @@ function WorkCard({
         <div className="overflow-hidden">
           <div className="px-5 pb-5">
             <div className="border-t border-border pt-4 space-y-4">
-              {/* Highlights */}
+              {/* Description & highlights */}
               <ul className="space-y-2">
                 {[exp.description, ...exp.highlights].map((text, i) => (
                   <li
