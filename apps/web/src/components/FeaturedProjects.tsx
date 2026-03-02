@@ -4,6 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { SHOW_FEATURED_PROJECTS } from "@/lib/feature-flags";
+
+import WorkInProgress from "./WorkInProgress";
+
 type Project = {
   title: string;
   description: string;
@@ -90,6 +94,16 @@ const getCardPosition = (
 export default function FeaturedProjects(): React.JSX.Element | null {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isPaused, setIsPaused] = useState<boolean>(false);
+
+  if (!SHOW_FEATURED_PROJECTS) {
+    return (
+      <section id="portfolio" className="px-6 py-20 md:py-28 bg-page">
+        <div className="max-w-7xl mx-auto">
+          <WorkInProgress />
+        </div>
+      </section>
+    );
+  }
 
   useEffect(() => {
     if (isPaused) {
