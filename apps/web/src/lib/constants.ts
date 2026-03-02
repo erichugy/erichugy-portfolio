@@ -8,5 +8,5 @@ export const NAV_LINKS = [
 
 export const SOCIAL_LINKS = [
   { name: "LinkedIn", href: "https://www.linkedin.com/in/erichugy/", icon: "in" },
-  { name: "GitHub", href: "https://www.github.com/erichugy/", icon: "github" },
+  { name: "GitHub", href: "https://github.com/erichugy/", icon: "github" },
 ] as const;
