@@ -54,9 +54,11 @@ export default function TradingBotPage() {
   const [error, setError] = useState<string | null>(null);
   const [articlesExpanded, setArticlesExpanded] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const isMountedRef = useRef(true);
 
   useEffect(() => {
     return () => {
+      isMountedRef.current = false;
       abortControllerRef.current?.abort();
     };
   }, []);
@@ -120,7 +122,9 @@ export default function TradingBotPage() {
         );
       }
     } finally {
-      setIsLoading(false);
+      if (isMountedRef.current) {
+        setIsLoading(false);
+      }
     }
   }
 
