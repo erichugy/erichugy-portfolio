@@ -83,10 +83,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   }
 
+  // NOTE: fall back to "anonymous" so requests without IP headers still get
+  // rate-limited as a group, rather than bypassing the limit entirely
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
     ?? req.headers.get("x-real-ip")?.trim()
-    ?? null;
-  if (ip && isRateLimited(ip)) {
+    ?? "anonymous";
+  if (isRateLimited(ip)) {
     return NextResponse.json(
       { error: "Too many messages. Please try again later." },
       { status: 429 },
