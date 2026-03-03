@@ -49,7 +49,7 @@ function isRateLimited(ip: string): boolean {
   return entry.count > MAX_REQUESTS;
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   const webhookUrl = process.env.CONTACT_WEBHOOK_URL;
   if (!webhookUrl) {
     return NextResponse.json(
