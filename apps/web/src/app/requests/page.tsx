@@ -84,6 +84,7 @@ const MAX_PANEL_WIDTH = 800;
 const MAX_VIEWS = 50;
 const MAX_VIEW_NAME_LENGTH = 100;
 const MAX_SEARCH_QUERY_LENGTH = 1000;
+const MAX_FILTER_VALUE_LENGTH = 500;
 
 const FIELD_OPERATORS: Record<FilterField, { value: FilterOperator; label: string }[]> = {
   method: [
@@ -326,13 +327,22 @@ function hasObjectProp(o: object, key: string): boolean {
   return key in o && typeof val === "object" && val !== null;
 }
 
+function refContainsTarget(
+  ref: React.RefObject<HTMLElement | null>,
+  e: MouseEvent,
+): boolean {
+  return ref.current !== null && e.target instanceof Node && ref.current.contains(e.target);
+}
+
 function isValidSavedView(v: unknown): v is SavedView {
   if (typeof v !== "object" || v === null) return false;
-  return (
-    hasStringProp(v, "id") &&
-    hasStringProp(v, "name") &&
-    (hasObjectProp(v, "search") || true)
-  );
+  if (!hasStringProp(v, "id") || !hasStringProp(v, "name")) return false;
+  // NOTE: validate filterGroups is an array if present — corrupt data could crash rendering
+  if ("filterGroups" in v) {
+    const groups = (v as Record<string, unknown>).filterGroups;
+    if (!Array.isArray(groups)) return false;
+  }
+  return true;
 }
 
 function loadViews(): SavedView[] {
@@ -902,6 +912,7 @@ export default function RequestBinPage(): React.ReactNode {
   const isMountedRef = useRef(true);
   const fetchIdRef = useRef(0);
   const isClearingRef = useRef(false);
+  const activeControllerRef = useRef<AbortController | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const filterDropdownRef = useRef<HTMLDivElement>(null);
   const tabContextMenuRef = useRef<HTMLDivElement>(null);
@@ -945,10 +956,7 @@ export default function RequestBinPage(): React.ReactNode {
   // Close filter dropdown on outside click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (
-        filterDropdownRef.current &&
-        !filterDropdownRef.current.contains(e.target as Node)
-      ) {
+      if (filterDropdownRef.current && !refContainsTarget(filterDropdownRef, e)) {
         setFilterDropdownOpen(false);
         setActiveFieldMenu(null);
         setActiveOperatorMenu(null);
@@ -965,10 +973,7 @@ export default function RequestBinPage(): React.ReactNode {
   // Close tab context menu on outside click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (
-        tabContextMenuRef.current &&
-        !tabContextMenuRef.current.contains(e.target as Node)
-      ) {
+      if (tabContextMenuRef.current && !refContainsTarget(tabContextMenuRef, e)) {
         setTabContextMenuId(null);
       }
     };
@@ -978,8 +983,11 @@ export default function RequestBinPage(): React.ReactNode {
 
   // Fetch requests
   const fetchRequests = useCallback((): AbortController => {
+    // NOTE: abort any previous in-flight fetch before starting a new one
+    activeControllerRef.current?.abort();
     const thisId = ++fetchIdRef.current;
     const controller = new AbortController();
+    activeControllerRef.current = controller;
     const timeout = setTimeout(() => controller.abort(), 10_000);
 
     (async () => {
@@ -993,7 +1001,7 @@ export default function RequestBinPage(): React.ReactNode {
           setRequests(validated);
         }
       } catch {
-        // network error or aborted
+        // NOTE: network error or aborted — silently ignore
       } finally {
         clearTimeout(timeout);
       }
@@ -1141,10 +1149,11 @@ export default function RequestBinPage(): React.ReactNode {
           addFilter(addingToGroupId, field, operator, "", [...pendingMethodSelections]);
         }
       }
-    } else if (field === "time" && operator === "between") {
-      if (pendingInputValue) {
-        addFilter(addingToGroupId, field, operator, pendingInputValue, undefined, pendingInputValueTo);
-      }
+    } else if (field === "time") {
+      // NOTE: validate dates before adding — NaN dates silently break time comparisons
+      if (Number.isNaN(new Date(pendingInputValue).getTime())) return;
+      if (operator === "between" && Number.isNaN(new Date(pendingInputValueTo).getTime())) return;
+      addFilter(addingToGroupId, field, operator, pendingInputValue, undefined, operator === "between" ? pendingInputValueTo : undefined);
     } else {
       if (pendingInputValue) {
         addFilter(addingToGroupId, field, operator, pendingInputValue);
@@ -1260,6 +1269,21 @@ export default function RequestBinPage(): React.ReactNode {
     URL.revokeObjectURL(url);
   }, [savedViews]);
 
+  const handleExportSingleView = useCallback((viewId: string) => {
+    const view = savedViews.find((v) => v.id === viewId);
+    if (!view) return;
+    const json = JSON.stringify([view], null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    const date = new Date().toISOString().slice(0, 10);
+    a.download = `requestbin-view-${view.name.replace(/\s+/g, "-").toLowerCase()}-${date}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setTabContextMenuId(null);
+  }, [savedViews]);
+
   const handleImportViews = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -1275,7 +1299,11 @@ export default function RequestBinPage(): React.ReactNode {
 
         setSavedViews((prev) => {
           const existingIds = new Set(prev.map((v) => v.id));
-          const newViews = valid.filter((v) => !existingIds.has(v.id));
+          const existingNames = new Set(prev.map((v) => v.name.toLowerCase()));
+          // NOTE: skip duplicates by both ID and name to avoid confusing identical tabs
+          const newViews = valid.filter(
+            (v) => !existingIds.has(v.id) && !existingNames.has(v.name.toLowerCase()),
+          );
           const merged = [...prev, ...newViews].slice(-MAX_VIEWS);
           saveToStorage("requestbin-views-v2", merged);
           return merged;
@@ -1568,7 +1596,8 @@ export default function RequestBinPage(): React.ReactNode {
             className="rb-submenu-input"
             placeholder={`Enter ${field} value...`}
             value={pendingInputValue}
-            onChange={(e) => setPendingInputValue(e.target.value)}
+            maxLength={MAX_FILTER_VALUE_LENGTH}
+            onChange={(e) => setPendingInputValue(e.target.value.slice(0, MAX_FILTER_VALUE_LENGTH))}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handleApplyFilter(field, operator);
@@ -1634,7 +1663,7 @@ export default function RequestBinPage(): React.ReactNode {
                   <button type="button" className="rb-danger" onClick={() => handleDeleteView(v.id)}>
                     Delete
                   </button>
-                  <button type="button" onClick={handleExportViews}>
+                  <button type="button" onClick={() => handleExportSingleView(v.id)}>
                     Export
                   </button>
                 </div>

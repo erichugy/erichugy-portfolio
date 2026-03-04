@@ -26,24 +26,25 @@ async function handle(
   );
 }
 
-export async function GET(request: NextRequest, ctx: RouteParams) {
+export async function GET(request: NextRequest, ctx: RouteParams): Promise<NextResponse> {
   return handle(request, ctx);
 }
-export async function POST(request: NextRequest, ctx: RouteParams) {
+export async function POST(request: NextRequest, ctx: RouteParams): Promise<NextResponse> {
   return handle(request, ctx);
 }
-export async function PUT(request: NextRequest, ctx: RouteParams) {
+export async function PUT(request: NextRequest, ctx: RouteParams): Promise<NextResponse> {
   return handle(request, ctx);
 }
-export async function DELETE(request: NextRequest, ctx: RouteParams) {
+export async function DELETE(request: NextRequest, ctx: RouteParams): Promise<NextResponse> {
   return handle(request, ctx);
 }
-export async function PATCH(request: NextRequest, ctx: RouteParams) {
+export async function PATCH(request: NextRequest, ctx: RouteParams): Promise<NextResponse> {
   return handle(request, ctx);
 }
-export async function HEAD(request: NextRequest, ctx: RouteParams) {
+export async function HEAD(request: NextRequest, ctx: RouteParams): Promise<NextResponse> {
   return handle(request, ctx);
 }
-export async function OPTIONS(request: NextRequest, ctx: RouteParams) {
-  return handle(request, ctx);
+export async function OPTIONS(_request: NextRequest, _ctx: RouteParams): Promise<NextResponse> {
+  // NOTE: CORS preflight should return 204 with headers only, no body
+  return new NextResponse(null, { status: 204, headers: corsHeaders });
 }
