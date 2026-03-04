@@ -80,6 +80,9 @@ export default function TradingBotPage() {
     setResult(null);
     setArticlesExpanded(false);
 
+    // NOTE: capture ref so we can detect if a newer submission superseded this one
+    const isStale = () => !isMountedRef.current || abortControllerRef.current !== controller;
+
     try {
       const response = await fetch(
         `${GATEWAY_URL}/api/services/trading-bot/analyze`,
@@ -90,6 +93,8 @@ export default function TradingBotPage() {
           signal: controller.signal,
         },
       );
+
+      if (isStale()) return;
 
       if (!response.ok) {
         const body = await response.json().catch(() => null);
@@ -102,16 +107,20 @@ export default function TradingBotPage() {
       try {
         raw = await response.json();
       } catch {
-        setError("Received an unexpected response format from the server.");
+        if (!isStale()) {
+          setError("Received an unexpected response format from the server.");
+        }
         return;
       }
       const data = analysisResultSchema.parse(raw);
-      setResult(data);
+      if (!isStale()) {
+        setResult(data);
+      }
     } catch (submitError) {
       if (submitError instanceof Error && submitError.name === "AbortError") {
-        // NOTE: user cancelled — don't show an error
         return;
       }
+      if (isStale()) return;
       if (submitError instanceof z.ZodError) {
         setError("Received an unexpected response format from the server.");
       } else {
@@ -122,7 +131,7 @@ export default function TradingBotPage() {
         );
       }
     } finally {
-      if (isMountedRef.current) {
+      if (!isStale()) {
         setIsLoading(false);
       }
     }
