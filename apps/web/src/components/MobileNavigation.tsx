@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,6 +15,7 @@ import ThemeToggle from "./ThemeToggle";
 export default function MobileNavigation() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   /**
    * Toggle menu open/close state
@@ -28,6 +29,8 @@ export default function MobileNavigation() {
    */
   const closeMenu = useCallback(() => {
     setIsOpen(false);
+    // Return focus to button
+    setTimeout(() => buttonRef.current?.focus(), 0);
   }, []);
 
   /**
@@ -38,23 +41,34 @@ export default function MobileNavigation() {
   }, []);
 
   /**
+   * Handle Escape key to close menu
+   */
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        closeMenu();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [isOpen, closeMenu]);
+
+  /**
    * Determine if a link is active based on current pathname
    */
   const isLinkActive = useCallback(
     (href: string): boolean => {
-      // Exact match for home
-      if (href === "/" && pathname === "/") {
-        return true;
+      // Handle hash links: treat "/#contact" as active when on home (/)
+      if (href.startsWith("/#")) {
+        return pathname === "/";
       }
-      // Check if pathname starts with the link href (but not for home)
-      if (href !== "/" && pathname.startsWith(href)) {
-        return true;
-      }
-      // Special case for contact anchor
-      if (href === "/#contact" && pathname === "/") {
-        return false;
-      }
-      return false;
+      return pathname === href;
     },
     [pathname]
   );
@@ -63,6 +77,8 @@ export default function MobileNavigation() {
     <>
       {/* Floating hamburger button - only visible on mobile (md:hidden) */}
       <button
+        type="button"
+        ref={buttonRef}
         onClick={toggleMenu}
         aria-label="Toggle navigation menu"
         aria-expanded={isOpen}
@@ -94,25 +110,19 @@ export default function MobileNavigation() {
         </svg>
       </button>
 
-      {/* Modal backdrop - semi-transparent, clickable to close */}
+      {/* Modal backdrop and container - z-index structured to allow backdrop clicks */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/30 dark:bg-black/50 z-40 md:hidden"
+          className="fixed inset-0 z-40 bg-black/30 dark:bg-black/50 flex flex-col items-end md:hidden"
           onClick={closeMenu}
           aria-hidden="true"
-        />
-      )}
-
-      {/* Navigation modal - menu content */}
-      {isOpen && (
-        <div
-          role="dialog"
-          aria-label="Navigation menu"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 md:hidden
-            opacity-0 animate-in fade-in duration-300"
         >
+          {/* Navigation modal - menu content positioned above backdrop */}
           <div
-            className="w-full max-w-sm rounded-2xl
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation menu"
+            className="relative z-50 w-full rounded-tl-3xl rounded-tr-3xl
               bg-white/80 dark:bg-slate-900/80
               backdrop-blur-md
               border border-white/20 dark:border-slate-700/50
