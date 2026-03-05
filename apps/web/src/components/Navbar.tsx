@@ -49,7 +49,7 @@ export default function Navbar() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-base font-medium font-mono text-body transition-colors hover:text-heading lg:text-lg"
+                  className="relative text-base font-medium font-mono text-body transition-colors hover:text-accent lg:text-lg after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-accent after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100"
                 >
                   {link.label}
                 </Link>
