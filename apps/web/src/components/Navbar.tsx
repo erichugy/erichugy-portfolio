@@ -84,13 +84,10 @@ export default function Navbar() {
                 </svg>
               )}
             </button>
-
             <ThemeToggle />
           </div>
         </nav>
       </header>
-
-      {/* Mobile Navigation Drawer */}
       <MobileNavigation isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
