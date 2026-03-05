@@ -6,8 +6,6 @@ import { useEffect } from "react";
 
 import { NAV_LINKS } from "@/lib/constants";
 
-import ThemeToggle from "./ThemeToggle";
-
 type MobileNavigationProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -108,11 +106,6 @@ export default function MobileNavigation({
             })}
           </ul>
         </nav>
-
-        {/* Theme Toggle */}
-        <div className="mt-auto pt-8 border-t border-border/20">
-          <ThemeToggle />
-        </div>
       </div>
     </>
   );
