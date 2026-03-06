@@ -129,6 +129,9 @@ export default function WorkExperience() {
           {/* Continuous vertical line (desktop only) */}
           <div className="hidden md:block absolute left-[120px] ml-[27px] top-[30px] bottom-[30px] w-[2px] bg-border" />
 
+          {/* Continuous vertical line (mobile only) */}
+          <div className="md:hidden absolute left-[11px] top-[12px] bottom-[12px] w-[2px] bg-border" />
+
           <div className="space-y-6">
             {WORK_EXPERIENCES.map((exp, index) => {
               const isExpanded = expandedIndex === index;
