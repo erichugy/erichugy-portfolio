@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const projectSchema = z.object({
+const projectSchema = z.object({
   title: z.string(),
   description: z.string(),
   image: z.string(),
@@ -46,4 +46,4 @@ export const PROJECTS: readonly Project[] = [
     secondaryCtaHref: "/projects",
     imageBackgroundClassName: "bg-[#E8E0F1]",
   },
-] as const;
+];

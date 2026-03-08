@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const rateEntrySchema = z.object({
+const rateEntrySchema = z.object({
   count: z.number(),
   windowStart: z.number(),
 });
