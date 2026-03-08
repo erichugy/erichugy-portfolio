@@ -83,6 +83,7 @@ export async function deleteRow(
 
   const spreadsheet = await sheets.spreadsheets.get({
     spreadsheetId: config.spreadsheetId,
+    fields: "sheets.properties.sheetId,sheets.properties.title",
   });
 
   const validSheets = z

@@ -57,7 +57,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const job = await appendJob({
       ...rest,
-      dateApplied: dateApplied ?? new Date().toISOString().split("T")[0]!,
+      dateApplied: dateApplied || new Date().toISOString().split("T")[0]!,
     });
     return NextResponse.json({ data: job }, { status: 201 });
   } catch {
