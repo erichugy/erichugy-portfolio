@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import axios from "@/services/axios";
-import type { CapturedRequest } from "@/tools/request-bin";
+import type { CapturedRequest } from "@/tools/request-bin/types";
 
 function escapeHtml(str: string): string {
   return str
