@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 
 import { requireApiKey } from "@/services/auth";
-import { appendJob, getAllJobs } from "@/services/google-sheets";
+import { appendJob, getAllJobs } from "@/services/job-tracker";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
