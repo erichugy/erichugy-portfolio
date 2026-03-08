@@ -77,7 +77,7 @@ const sheetPropertiesSchema = z.object({
 
 export async function deleteRow(
   config: SheetConfig,
-  rowIndex: number,
+  sheetRowNumber: number,
 ): Promise<void> {
   const sheets = getClient();
 
@@ -105,8 +105,8 @@ export async function deleteRow(
             range: {
               sheetId: sheet.properties.sheetId,
               dimension: "ROWS",
-              startIndex: rowIndex - 1,
-              endIndex: rowIndex,
+              startIndex: sheetRowNumber - 1,
+              endIndex: sheetRowNumber,
             },
           },
         },

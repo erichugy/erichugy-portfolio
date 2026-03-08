@@ -39,8 +39,15 @@ export async function getAllJobs(): Promise<JobRow[]> {
 }
 
 export async function getJobById(id: string): Promise<JobRow | null> {
-  const jobs = await getAllJobs();
-  return jobs.find((j) => j.id === id) ?? null;
+  const config = getConfig();
+  const rowNum = await findRowNumber(config, id);
+  if (!rowNum) return null;
+
+  const rows = await getRows(config, `A${rowNum}:H${rowNum}`);
+  const row = rows[0];
+  if (!row) return null;
+
+  return rowToJob(row);
 }
 
 export async function appendJob(job: Omit<JobRow, "id">): Promise<JobRow> {
@@ -53,8 +60,8 @@ export async function appendJob(job: Omit<JobRow, "id">): Promise<JobRow> {
 // NOTE: findRowNumber + subsequent mutation is not atomic — concurrent
 // requests can shift row numbers between lookup and write. Acceptable
 // for a low-traffic personal tool; use a real database if this matters.
-async function findRowNumber(id: string): Promise<number | null> {
-  const rows = await getRows(getConfig(), "A:A");
+async function findRowNumber(config: SheetConfig, id: string): Promise<number | null> {
+  const rows = await getRows(config, "A:A");
   // Skip header row (index 0); return 1-indexed sheet row number
   for (let i = 1; i < rows.length; i++) {
     if (rows[i]?.[0] === id) return i + 1;
@@ -67,7 +74,7 @@ export async function updateJob(
   updates: Partial<Omit<JobRow, "id">>,
 ): Promise<JobRow | null> {
   const config = getConfig();
-  const rowNum = await findRowNumber(id);
+  const rowNum = await findRowNumber(config, id);
   if (!rowNum) return null;
 
   const currentRows = await getRows(config, `A${rowNum}:H${rowNum}`);
@@ -82,8 +89,9 @@ export async function updateJob(
 }
 
 export async function deleteJob(id: string): Promise<boolean> {
-  const rowNum = await findRowNumber(id);
+  const config = getConfig();
+  const rowNum = await findRowNumber(config, id);
   if (!rowNum) return false;
-  await deleteRow(getConfig(), rowNum);
+  await deleteRow(config, rowNum);
   return true;
 }
