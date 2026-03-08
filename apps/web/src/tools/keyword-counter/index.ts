@@ -4,67 +4,27 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import type {
+  KeywordCounterInput,
+  KeywordCounterJob,
+  KeywordCounterStatus,
+  MessageMatchRow,
+  SummaryResult,
+} from "./types";
+
+export type {
+  KeywordCounterInput,
+  KeywordCounterJob,
+  KeywordCounterStatus,
+  MessageMatchRow,
+  SummaryResult,
+} from "./types";
+
 const API_BASE_URL = "https://api.botpress.cloud/v1/chat/messages";
 const PAGE_LIMIT = 700;
 const MAX_RETRIES = 8;
 const REQUEST_TIMEOUT_MS = 60_000;
 const PREVIEW_LIMIT = 200;
-
-export type KeywordCounterStatus = "running" | "completed" | "failed";
-
-export type KeywordCounterInput = {
-  pat: string;
-  botId: string;
-  keywords: string;
-  startDate: string;
-  endDate?: string;
-  verbose?: boolean;
-};
-
-export type MessageMatchRow = {
-  conversationId: string;
-  keywords: string;
-  sender: string;
-  messageId: string;
-  message: string;
-};
-
-export type SummaryResult = {
-  runId: string;
-  createdAtUtc: string;
-  dateRangeUtc: { start: string; end: string };
-  keywords: string[];
-  totals: {
-    pagesFetched: number;
-    messagesScanned: number;
-    messagesWithAnyKeyword: number;
-    uniqueConversationsWithAnyKeyword: number;
-  };
-  keywordStats: Record<string, { occurrences: number; messagesContainingKeyword: number }>;
-  conversationIdsWithAnyKeyword: string[];
-};
-
-export type KeywordCounterJob = {
-  id: string;
-  status: KeywordCounterStatus;
-  createdAt: string;
-  updatedAt: string;
-  outputDir: string;
-  error?: string;
-  summaryText?: string;
-  summary?: SummaryResult;
-  files: Array<{ name: string; size: number }>;
-  messageMatchesCount: number;
-  messageMatchesPreview: MessageMatchRow[];
-  progress: {
-    stage: string;
-    pagesFetched: number;
-    messagesScanned: number;
-    messagesWithAnyKeyword: number;
-    matchedConversations: number;
-    elapsedSeconds: number;
-  };
-};
 
 const outputRoot = path.join(process.cwd(), ".tmp", "keyword-counter");
 
@@ -246,7 +206,7 @@ function buildSummaryText(summary: SummaryResult) {
   lines.push("");
   lines.push("Keyword Stats:");
   for (const keyword of summary.keywords) {
-    const stats = summary.keywordStats[keyword];
+    const stats = summary.keywordStats[keyword]!;
     lines.push(`- ${keyword}: ${stats.occurrences} occurrence(s), ${stats.messagesContainingKeyword} message(s)`);
   }
   lines.push("");
