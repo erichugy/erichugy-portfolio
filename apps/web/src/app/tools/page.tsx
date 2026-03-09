@@ -15,7 +15,6 @@ export default function ToolsPage() {
     <>
       <Navbar />
       <main>
-        {/* Hero */}
         <section className="px-6 pt-32 pb-20 md:pt-40 md:pb-28 bg-page">
           <div className="max-w-3xl mx-auto">
             <p className="font-mono text-sm text-muted tracking-wide mb-3">
@@ -30,7 +29,6 @@ export default function ToolsPage() {
           </div>
         </section>
 
-        {/* Tools Grid */}
         <section className="px-6 py-20 md:py-28 bg-page-alt">
           <div className="max-w-5xl mx-auto">
             <div className="grid md:grid-cols-2 gap-8">
@@ -39,7 +37,6 @@ export default function ToolsPage() {
                   key={tool.title}
                   className="card-glow bg-card rounded-xl border border-border shadow-[0_2px_8px_rgba(12,27,33,0.06)] overflow-hidden flex flex-col"
                 >
-                  {/* Gradient header with icon */}
                   <div
                     className={`bg-gradient-to-br ${tool.gradient} px-6 py-10 flex items-center justify-center`}
                   >
@@ -48,16 +45,14 @@ export default function ToolsPage() {
                     </span>
                   </div>
 
-                  {/* Card body */}
                   <div className="p-6 flex flex-col flex-1">
                     <h2 className="text-xl font-bold text-heading mb-2">
                       {tool.title}
                     </h2>
                     <p className="text-sm text-body leading-relaxed mb-4">
-                      {tool.longDescription}
+                      {tool.description}
                     </p>
 
-                    {/* Tech stack pills */}
                     <div className="flex flex-wrap gap-2 mb-6">
                       {tool.techStack.map((tech) => (
                         <span
@@ -69,7 +64,6 @@ export default function ToolsPage() {
                       ))}
                     </div>
 
-                    {/* CTA pushed to bottom */}
                     <div className="mt-auto">
                       <Link
                         href={tool.href}
