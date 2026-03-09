@@ -10,7 +10,6 @@
         "GOOGLE_PRIVATE_KEY",
         "GOOGLE_SHEETS_ID",
         "GOOGLE_SHEETS_TAB_NAME",
-        "JOB_TRACKER_API_KEY"
       ]
     },
     "dev": {
