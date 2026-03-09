@@ -56,6 +56,7 @@ export async function appendRow(
     spreadsheetId: config.spreadsheetId,
     range: a1Range(config.tabName, range),
     valueInputOption: "RAW",
+    insertDataOption: "INSERT_ROWS",
     requestBody: { values: [values] },
   });
 }
