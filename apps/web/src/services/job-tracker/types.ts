@@ -9,5 +9,6 @@ export const jobRowSchema = z.object({
   dateApplied: z.string(),
   location: z.string(),
   link: z.string(),
+  notes: z.string(),
 });
 export type JobRow = z.infer<typeof jobRowSchema>;
