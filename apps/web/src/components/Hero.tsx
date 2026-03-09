@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+import NavLink from "./NavLink";
+
 export default function Hero() {
   return (
     <section className="px-6 py-20 md:py-28 lg:py-36 bg-page">
@@ -36,12 +38,12 @@ export default function Hero() {
               >
                 Download Resume
               </a>
-              <a
-                href="#contact"
+              <NavLink
+                href="/#contact"
                 className="border border-accent text-accent hover:bg-accent/10 px-6 py-2.5 rounded-[10px] transition-all font-semibold text-sm"
               >
                 Get in Touch
-              </a>
+              </NavLink>
             </div>
           </div>
 
