@@ -87,29 +87,6 @@ export default function HobbiesPage() {
             </div>
           </div>
         </section>
-
-        <section className="px-6 py-20 md:py-28 bg-page">
-          <div className="max-w-3xl mx-auto text-center">
-            <p className="font-mono text-sm text-muted tracking-wide mb-3">
-              {"// a_note"}
-            </p>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-heading mb-6">
-              Why It Matters
-            </h2>
-            <p className="text-base md:text-lg text-body leading-relaxed mb-4">
-              I believe the best engineers bring more than technical skills to
-              the table. Climbing teaches me patience and creative
-              problem-solving. Photography sharpens my eye for detail and
-              composition. Tinkering with open source and AI keeps my curiosity
-              alive.
-            </p>
-            <p className="text-base md:text-lg text-body leading-relaxed">
-              These interests shape how I approach software — with persistence,
-              an appreciation for craft, and a genuine love for learning
-              something new every day.
-            </p>
-          </div>
-        </section>
       </main>
       <Footer />
     </>
