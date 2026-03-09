@@ -18,6 +18,7 @@ const updateJobSchema = z
     dateApplied: z.string().trim().optional(),
     location: z.string().trim().max(300).optional(),
     link: z.string().trim().max(2000).optional(),
+    notes: z.string().trim().max(50000).optional(),
   })
   .refine((obj) => Object.keys(obj).length > 0, {
     message: "At least one field is required.",

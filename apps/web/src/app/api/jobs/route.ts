@@ -15,6 +15,7 @@ const createJobSchema = z.object({
   dateApplied: z.string().trim().optional(),
   location: z.string().trim().max(300).default(""),
   link: z.string().trim().max(2000).default(""),
+  notes: z.string().trim().max(50000).default(""),
 });
 
 export async function GET(req: NextRequest): Promise<NextResponse> {

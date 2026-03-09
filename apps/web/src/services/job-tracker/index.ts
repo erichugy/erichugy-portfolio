@@ -14,6 +14,7 @@ const COLUMNS = [
   "dateApplied",
   "location",
   "link",
+  "notes",
 ] as const;
 
 function getConfig(): SheetConfig {
@@ -37,7 +38,7 @@ function jobToRow(job: JobRow): string[] {
 }
 
 export async function getAllJobs(): Promise<JobRow[]> {
-  const rows = await getRows(getConfig(), "A2:H");
+  const rows = await getRows(getConfig(), "A2:I");
   return rows.map(rowToJob);
 }
 
@@ -46,7 +47,7 @@ export async function getJobById(id: string): Promise<JobRow | null> {
   const rowNum = await findRowNumber(config, id);
   if (!rowNum) return null;
 
-  const rows = await getRows(config, `A${rowNum}:H${rowNum}`);
+  const rows = await getRows(config, `A${rowNum}:I${rowNum}`);
   const row = rows[0];
   if (!row) return null;
 
@@ -56,7 +57,7 @@ export async function getJobById(id: string): Promise<JobRow | null> {
 export async function appendJob(job: Omit<JobRow, "id">): Promise<JobRow> {
   const id = randomUUID();
   const fullJob: JobRow = { id, ...job };
-  await appendRow(getConfig(), "A:H", jobToRow(fullJob));
+  await appendRow(getConfig(), "A:I", jobToRow(fullJob));
   return fullJob;
 }
 
@@ -80,14 +81,14 @@ export async function updateJob(
   const rowNum = await findRowNumber(config, id);
   if (!rowNum) return null;
 
-  const currentRows = await getRows(config, `A${rowNum}:H${rowNum}`);
+  const currentRows = await getRows(config, `A${rowNum}:I${rowNum}`);
   const currentRow = currentRows[0];
   if (!currentRow) return null;
 
   const current = rowToJob(currentRow);
   const updated: JobRow = { ...current, ...updates, id };
 
-  await updateRow(config, `A${rowNum}:H${rowNum}`, jobToRow(updated));
+  await updateRow(config, `A${rowNum}:I${rowNum}`, jobToRow(updated));
   return updated;
 }
 
