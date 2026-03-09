@@ -11,6 +11,10 @@ import WorkInProgress from "./WorkInProgress";
 
 const AUTOPLAY_DELAY_MS = 4500;
 
+function isExternal(href: string): boolean {
+  return href.startsWith("http");
+}
+
 type CardPosition = "active" | "previous" | "next" | "hidden";
 
 const CARD_POSITION_CLASSNAME: Record<CardPosition, string> = {
@@ -177,6 +181,10 @@ export default function FeaturedProjects(): React.JSX.Element | null {
                 <Link
                   href={activeProject.primaryCtaHref}
                   className="inline-flex items-center justify-center bg-accent hover:bg-accent-hover text-accent-text px-5 py-2 rounded-[10px] transition-all hover:shadow-md font-semibold text-sm"
+                  {...(isExternal(activeProject.primaryCtaHref) && {
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                  })}
                 >
                   {activeProject.primaryCtaLabel}
                 </Link>
@@ -185,6 +193,10 @@ export default function FeaturedProjects(): React.JSX.Element | null {
                     <Link
                       href={activeProject.secondaryCtaHref}
                       className="inline-flex items-center justify-center border border-border bg-page text-heading px-5 py-2 rounded-[10px] transition-all font-medium text-sm hover:bg-card hover:shadow-sm"
+                      {...(isExternal(activeProject.secondaryCtaHref) && {
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                      })}
                     >
                       {activeProject.secondaryCtaLabel}
                     </Link>

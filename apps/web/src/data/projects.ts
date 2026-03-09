@@ -9,6 +9,7 @@ export interface Project {
   secondaryCtaLabel?: string;
   secondaryCtaHref?: string;
   imageBackgroundClassName: string;
+  emoji?: string;
   featured?: boolean;
 }
 
@@ -30,6 +31,7 @@ export const PROJECTS: readonly Project[] = [
     primaryCtaHref: "https://github.com/denis-tsariov/python-poker-bot",
     imageBackgroundClassName:
       "bg-gradient-to-br from-emerald-500/80 to-cyan-600/80",
+    emoji: "\uD83C\uDCCF",
     featured: true,
   },
   {
@@ -46,6 +48,7 @@ export const PROJECTS: readonly Project[] = [
     secondaryCtaHref: "https://github.com/erichugy/",
     imageBackgroundClassName:
       "bg-gradient-to-br from-violet-500/80 to-fuchsia-600/80",
+    emoji: "\uD83D\uDCC8",
   },
   {
     title: "Distributed RL Path-Finding",
@@ -59,5 +62,6 @@ export const PROJECTS: readonly Project[] = [
     primaryCtaHref: "/Eric_Huang_Software-can.pdf",
     imageBackgroundClassName:
       "bg-gradient-to-br from-amber-500/80 to-orange-600/80",
+    emoji: "\uD83E\uDDE0",
   },
 ];
