@@ -88,19 +88,20 @@ export default function MobileNavigation({
           <ul className="flex flex-col gap-6">
             {NAV_LINKS.map((link) => {
               const isActive = pathname === link.href;
+              const className = `text-lg font-medium font-mono transition-colors ${
+                isActive ? "text-accent" : "text-body hover:text-heading"
+              }`;
               return (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    onClick={onClose}
-                    className={`text-lg font-medium font-mono transition-colors ${
-                      isActive
-                        ? "text-accent"
-                        : "text-body hover:text-heading"
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
+                  {link.href.includes("#") ? (
+                    <a href={link.href} onClick={onClose} className={className}>
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link href={link.href} onClick={onClose} className={className}>
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               );
             })}

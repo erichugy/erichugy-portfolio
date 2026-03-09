@@ -45,16 +45,22 @@ export default function Navbar() {
           </Link>
 
           <ul className="hidden md:flex items-center gap-6 justify-self-center lg:gap-8">
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="relative text-base font-medium font-mono text-body transition-colors hover:text-accent lg:text-lg after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-accent after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const className = "relative text-base font-medium font-mono text-body transition-colors hover:text-accent lg:text-lg after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-accent after:scale-x-0 after:origin-left after:transition-transform after:duration-300 hover:after:scale-x-100";
+              return (
+                <li key={link.href}>
+                  {link.href.includes("#") ? (
+                    <a href={link.href} className={className}>
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link href={link.href} className={className}>
+                      {link.label}
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
           </ul>
 
           {/* Mobile: Right - Hamburger | Desktop: Right - Theme Toggle */}

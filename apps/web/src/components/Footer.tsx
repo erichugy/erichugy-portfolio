@@ -55,12 +55,21 @@ export default function Footer() {
             <ul className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="font-mono text-muted hover:text-heading transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
+                  {link.href.includes("#") ? (
+                    <a
+                      href={link.href}
+                      className="font-mono text-muted hover:text-heading transition-colors text-sm"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      className="font-mono text-muted hover:text-heading transition-colors text-sm"
+                    >
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
