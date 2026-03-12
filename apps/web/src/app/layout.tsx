@@ -35,8 +35,8 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning>
-          <FoodCollectorProvider>{children}</FoodCollectorProvider>
-        </body>
+        <FoodCollectorProvider>{children}</FoodCollectorProvider>
+      </body>
     </html>
   );
 }

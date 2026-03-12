@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
 interface CelebrationModalProps {
   onClose: () => void;
   onReset: () => void;
@@ -8,12 +10,31 @@ interface CelebrationModalProps {
 const CONFETTI_EMOJIS = ["🎊", "🎉", "✨", "🍕", "🍣", "🌮"];
 
 export default function CelebrationModal({ onClose, onReset }: CelebrationModalProps) {
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    closeRef.current?.focus();
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleEscape);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [onClose]);
+
   return (
     <div
       className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Celebration"
       onClick={onClose}
     >
-      {/* Falling confetti */}
       {CONFETTI_EMOJIS.map((e, i) => (
         <span
           key={i}
@@ -28,7 +49,6 @@ export default function CelebrationModal({ onClose, onReset }: CelebrationModalP
         </span>
       ))}
 
-      {/* Modal card */}
       <div
         className="relative mx-4 w-full max-w-md rounded-xl border border-border bg-card p-8 shadow-lg"
         onClick={(e) => e.stopPropagation()}
@@ -37,13 +57,13 @@ export default function CelebrationModal({ onClose, onReset }: CelebrationModalP
           🎉 You found them all!
         </h2>
 
-        {/* Video placeholder */}
         <div className="mb-6 flex aspect-video items-center justify-center rounded-lg border border-border bg-page-alt">
           <p className="text-sm text-muted">🎬 Video coming soon</p>
         </div>
 
         <div className="flex gap-3">
           <button
+            ref={closeRef}
             onClick={onClose}
             className="flex-1 rounded-[10px] border border-border px-4 py-2.5 text-sm font-semibold text-heading transition-colors hover:bg-page-alt"
           >

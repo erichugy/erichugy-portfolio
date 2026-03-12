@@ -19,12 +19,18 @@ const FoodCollectorContext = createContext<FoodCollectorContextValue | null>(nul
 
 const STORAGE_KEY = "food-collector-collected";
 
+const NOOP_VALUE: FoodCollectorContextValue = {
+  collected: new Set(),
+  total: 0,
+  collect: () => {},
+  allCollected: false,
+  reset: () => {},
+};
+
 export function useFoodCollector() {
   const ctx = useContext(FoodCollectorContext);
-  if (!ctx) {
-    throw new Error("useFoodCollector must be used within FoodCollectorProvider");
-  }
-  return ctx;
+  // Safe fallback when flag is off — provider renders no context in that case
+  return ctx ?? NOOP_VALUE;
 }
 
 export default function FoodCollectorProvider({ children }: { children: React.ReactNode }) {
