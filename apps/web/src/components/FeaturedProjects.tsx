@@ -4,56 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { SHOW_FEATURED_PROJECTS } from "@/lib/feature-flags";
+import { SHOW_FEATURED_PROJECTS } from "@/config/feature-flags";
+import { PROJECTS } from "@/data/projects";
 
 import WorkInProgress from "./WorkInProgress";
-
-type Project = {
-  title: string;
-  description: string;
-  image: string;
-  primaryCtaLabel: string;
-  primaryCtaHref: string;
-  secondaryCtaLabel: string;
-  secondaryCtaHref: string;
-  imageBackgroundClassName: string;
-};
-
-const PROJECTS: readonly Project[] = [
-  {
-    title: "Business Website",
-    description:
-      "A professional website designed for a growing company to showcase their services and connect with customers.",
-    image: "/inspiration.png",
-    primaryCtaLabel: "Visit Site",
-    primaryCtaHref: "/projects",
-    secondaryCtaLabel: "View Code",
-    secondaryCtaHref: "/projects",
-    imageBackgroundClassName: "bg-[#F1E4C8]",
-  },
-  {
-    title: "E-commerce Site",
-    description:
-      "A fully functional online store built for a fashion brand with seamless checkout and inventory management.",
-    image: "/inspiration.png",
-    primaryCtaLabel: "Shop Demo",
-    primaryCtaHref: "/projects",
-    secondaryCtaLabel: "View Code",
-    secondaryCtaHref: "/projects",
-    imageBackgroundClassName: "bg-[#DCEAF4]",
-  },
-  {
-    title: "Portfolio Website",
-    description:
-      "A creative and visually appealing portfolio website for a photographer to display their work.",
-    image: "/inspiration.png",
-    primaryCtaLabel: "View Project",
-    primaryCtaHref: "/projects",
-    secondaryCtaLabel: "View Code",
-    secondaryCtaHref: "/projects",
-    imageBackgroundClassName: "bg-[#E8E0F1]",
-  },
-];
 
 const AUTOPLAY_DELAY_MS = 4500;
 
@@ -95,18 +49,8 @@ export default function FeaturedProjects(): React.JSX.Element | null {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isPaused, setIsPaused] = useState<boolean>(false);
 
-  if (!SHOW_FEATURED_PROJECTS) {
-    return (
-      <section id="portfolio" className="px-6 py-20 md:py-28 bg-page">
-        <div className="max-w-7xl mx-auto">
-          <WorkInProgress />
-        </div>
-      </section>
-    );
-  }
-
   useEffect(() => {
-    if (isPaused) {
+    if (!SHOW_FEATURED_PROJECTS || isPaused) {
       return;
     }
 
@@ -120,6 +64,16 @@ export default function FeaturedProjects(): React.JSX.Element | null {
       window.clearInterval(intervalId);
     };
   }, [isPaused]);
+
+  if (!SHOW_FEATURED_PROJECTS) {
+    return (
+      <section id="portfolio" className="px-6 py-20 md:py-28 bg-page">
+        <div className="max-w-7xl mx-auto">
+          <WorkInProgress />
+        </div>
+      </section>
+    );
+  }
 
   const goToPreviousProject = (): void => {
     setActiveIndex(

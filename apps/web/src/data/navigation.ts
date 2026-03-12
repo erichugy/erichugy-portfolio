@@ -1,11 +1,15 @@
-export const NAV_LINKS = [
+import type { NavLink, SocialLink } from "@/types/navigation";
+
+export type { NavLink, SocialLink } from "@/types/navigation";
+
+export const NAV_LINKS: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "About Me", href: "/about" },
   { label: "Projects & Tools", href: "/projects" },
   { label: "Contact", href: "/#contact" },
-] as const;
+];
 
-export const SOCIAL_LINKS = [
+export const SOCIAL_LINKS: SocialLink[] = [
   { name: "LinkedIn", href: "https://www.linkedin.com/in/erichugy/", icon: "in" },
   { name: "GitHub", href: "https://github.com/erichugy/", icon: "github" },
-] as const;
+];

@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { captureFromNextRequest } from "@/lib/requestBinStore";
+import { captureFromNextRequest } from "@/tools/request-bin/adapter";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

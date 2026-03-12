@@ -1,7 +1,11 @@
 "use client";
 
+import { type AxiosError } from "axios";
 import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { z } from "zod";
+
+import axios from "@/services/axios";
+import { formatBytes } from "@/utils/format";
 
 const jobResponseSchema = z.object({
   id: z.string(),
@@ -34,16 +38,6 @@ const jobResponseSchema = z.object({
 
 type JobResponse = z.infer<typeof jobResponseSchema>;
 
-function formatBytes(bytes: number) {
-  if (bytes < 1024) {
-    return `${bytes} B`;
-  }
-  if (bytes < 1024 * 1024) {
-    return `${(bytes / 1024).toFixed(1)} KB`;
-  }
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
 export default function KeywordCounterTool() {
   const [pat, setPat] = useState("");
   const [botId, setBotId] = useState("");
@@ -63,16 +57,12 @@ export default function KeywordCounterTool() {
     }
 
     const poll = async () => {
-      const response = await fetch(`/api/tools/keyword-counter?jobId=${jobId}`, {
-        cache: "no-store",
+      const response = await axios.get("/api/tools/keyword-counter", {
+        params: { jobId },
+        headers: { "Cache-Control": "no-cache" },
       });
 
-      if (!response.ok) {
-        const body = await response.json().catch(() => null);
-        throw new Error(body?.error || "Failed to fetch tool status.");
-      }
-
-      const raw = await response.json();
+      const raw = response.data;
       const parsed = jobResponseSchema.safeParse(raw);
       if (!parsed.success) {
         console.error("Malformed job status response:", parsed.error);
@@ -128,27 +118,19 @@ export default function KeywordCounterTool() {
     setJob(null);
 
     try {
-      const response = await fetch("/api/tools/keyword-counter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pat,
-          botId,
-          keywords,
-          startDate,
-          endDate,
-          verbose,
-        }),
+      const response = await axios.post("/api/tools/keyword-counter", {
+        pat,
+        botId,
+        keywords,
+        startDate,
+        endDate,
+        verbose,
       });
 
-      const body = await response.json();
-      if (!response.ok) {
-        throw new Error(body?.error || "Unable to start keyword counter run.");
-      }
-
-      setJobId(body.jobId);
+      setJobId(response.data.jobId);
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Unexpected error.");
+      const axiosErr = submitError as AxiosError<{ error?: string }>;
+      setError(axiosErr.response?.data?.error || (submitError instanceof Error ? submitError.message : "Unexpected error."));
     } finally {
       setIsSubmitting(false);
     }

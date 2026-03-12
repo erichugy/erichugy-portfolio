@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { type WorkExperience as WorkExp, WORK_EXPERIENCES } from "@/lib/about-data";
+
+import { type WorkExperience as WorkExp, WORK_EXPERIENCES } from "@/data/about";
 
 function ChevronIcon({ expanded }: { expanded: boolean }) {
   return (
@@ -129,6 +130,9 @@ export default function WorkExperience() {
           {/* Continuous vertical line (desktop only) */}
           <div className="hidden md:block absolute left-[120px] ml-[27px] top-[30px] bottom-[30px] w-[2px] bg-border" />
 
+          {/* Continuous vertical line (mobile only — offsets derived from 24px TimelineDot) */}
+          <div className="md:hidden absolute left-[11px] top-[12px] bottom-[12px] w-[2px] bg-border" />
+
           <div className="space-y-6">
             {WORK_EXPERIENCES.map((exp, index) => {
               const isExpanded = expandedIndex === index;
@@ -136,9 +140,12 @@ export default function WorkExperience() {
               return (
                 <div key={index}>
                   {/* Mobile layout: date + dot row, then card */}
-                  <div className="md:hidden">
-                    <div className="mb-2 flex items-center gap-3">
+                  <div className="md:hidden relative pl-10">
+                    {/* 36px = date label line-height + mb-2 spacing */}
+                    <div className="absolute left-0 top-[36px]">
                       <TimelineDot isExpanded={isExpanded} bg="bg-page-alt" />
+                    </div>
+                    <div className="mb-2 pt-0.5">
                       <span className="font-mono text-xs text-muted">
                         {exp.duration}
                       </span>

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { z } from "zod";
 
+import { TECH_STACK, RECOMMENDATION_STYLES } from "@/data/trading-bot";
+
 const articleSchema = z.object({
   title: z.string(),
   url: z.string(),
@@ -20,25 +22,11 @@ const analysisResultSchema = z.object({
   articles: z.array(articleSchema),
 });
 
-type Article = z.infer<typeof articleSchema>;
+type _Article = z.infer<typeof articleSchema>;
 type AnalysisResult = z.infer<typeof analysisResultSchema>;
 
 const GATEWAY_URL =
   process.env.NEXT_PUBLIC_GATEWAY_URL || "http://localhost:8080";
-
-const TECH_STACK = [
-  { name: "Python", description: "Core language" },
-  { name: "Flask", description: "Web framework" },
-  { name: "Cohere", description: "NLP model" },
-  { name: "Alpaca API", description: "News data" },
-  { name: "BeautifulSoup", description: "Web scraping" },
-] as const;
-
-const RECOMMENDATION_STYLES: Record<string, string> = {
-  BUY: "bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-700",
-  SELL: "bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700",
-  HOLD: "bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-700",
-};
 
 function getRecommendationStyle(recommendation: string): string {
   return (
@@ -153,7 +141,7 @@ export default function TradingBotPage() {
             </p>
             <p className="text-base md:text-lg text-body leading-relaxed max-w-2xl">
               Enter any stock ticker and this tool fetches the latest news
-              articles via the Alpaca Markets API, runs them through Cohere's
+              articles via the Alpaca Markets API, runs them through Cohere&apos;s
               NLP model to evaluate sentiment, then generates a BUY, SELL, or
               HOLD recommendation with a confidence score.
             </p>
