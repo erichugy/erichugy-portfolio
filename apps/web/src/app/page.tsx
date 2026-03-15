@@ -1,4 +1,4 @@
-import About from "@/components/About";
+import Experience from "@/components/Experience";
 import ContactCTA from "@/components/ContactCTA";
 import FeaturedProjects from "@/components/FeaturedProjects";
 import Footer from "@/components/Footer";
@@ -11,7 +11,7 @@ export default function Page() {
       <Navbar />
       <main>
         <Hero />
-        <About />
+        <Experience />
         <FeaturedProjects />
         <ContactCTA />
       </main>
