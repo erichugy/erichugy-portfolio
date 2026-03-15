@@ -9,12 +9,12 @@ import { SHOW_ACTIVITIES, SHOW_DATES } from "@/config/feature-flags";
 import { CERTIFICATIONS, LANGUAGES } from "@/data/about";
 
 export const metadata = {
-  title: "About Me | Eric Huang",
+  title: "Experience | Eric Huang",
   description:
     "Learn more about my experience, skills, education, and activities.",
 };
 
-export default function AboutPage() {
+export default function ExperiencePage() {
   return (
     <>
       <Navbar />
@@ -23,10 +23,10 @@ export default function AboutPage() {
         <section className="px-6 pt-32 pb-20 md:pt-40 md:pb-28 bg-page">
           <div className="max-w-3xl mx-auto">
             <p className="font-mono text-sm text-muted tracking-wide mb-3">
-              {">"} about_me
+              {">"} experience
             </p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-heading mb-6">
-              About Me
+              Experience
             </h1>
             <p className="text-base md:text-lg text-body leading-relaxed mb-4">
               Software engineer with experience in applied AI and enterprise

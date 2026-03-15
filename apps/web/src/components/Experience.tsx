@@ -1,14 +1,14 @@
 import Link from "next/link";
 
-export default function About() {
+export default function Experience() {
   return (
-    <section id="about" className="px-6 py-20 md:py-28 bg-page-alt">
+    <section id="experience" className="px-6 py-20 md:py-28 bg-page-alt">
       <div className="max-w-3xl mx-auto">
         <p className="font-mono text-sm text-muted tracking-wide mb-3">
-          {">"} about_me
+          {">"} experience
         </p>
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-heading mb-6">
-          About Me
+          Experience
         </h2>
         <p className="text-base md:text-lg text-body leading-relaxed mb-4">
           Software engineer with experience in applied AI and enterprise
@@ -22,7 +22,7 @@ export default function About() {
           developers more productive and systems that scale.
         </p>
         <Link
-          href="/about"
+          href="/experience"
           scroll={true}
           className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-accent-text px-6 py-2.5 rounded-[10px] transition-all hover:shadow-md font-semibold text-sm"
         >
