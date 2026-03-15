@@ -5,12 +5,12 @@ import NavLink from "./NavLink";
 export default function Hero() {
   return (
     <section className="px-6 py-20 md:py-28 lg:py-36 bg-page">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="flex flex-col items-center md:grid md:grid-cols-2 gap-3 lg:gap-4 md:items-center">
           {/* Left Content */}
           <div className="space-y-5">
             <p className="font-mono text-sm text-muted tracking-wide">
-              {"// welcome to my portfolio"}
+              {"// welcome to my page"}
             </p>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-heading leading-[1.08]">
@@ -50,7 +50,6 @@ export default function Hero() {
           {/* Right Illustration */}
           <div className="flex justify-center md:justify-end">
             <div className="relative w-full max-w-md">
-              {/* Placeholder for illustration - using logo as placeholder for now */}
               <div className="relative aspect-square bg-gradient-to-br from-accent/15 to-accent/5 rounded-[1.25rem] p-8 flex items-center justify-center border border-border/50">
                 <Image
                   src="/me.png"
