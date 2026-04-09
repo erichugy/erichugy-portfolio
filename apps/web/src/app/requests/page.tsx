@@ -1,13 +1,17 @@
 "use client";
 
-import type React from "react";
 import {
+  type ChangeEvent,
+  type MouseEvent as ReactMouseEvent,
+  type ReactNode,
+  type RefObject,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
+import { FiDownload } from "react-icons/fi";
 
 import type { CapturedRequest } from "@/tools/request-bin/types";
 import { formatTime } from "@/utils/format";
@@ -299,7 +303,7 @@ function hasStringProp(o: object, key: string): boolean {
 }
 
 function refContainsTarget(
-  ref: React.RefObject<HTMLElement | null>,
+  ref: RefObject<HTMLElement | null>,
   e: MouseEvent,
 ): boolean {
   return ref.current !== null && e.target instanceof Node && ref.current.contains(e.target);
@@ -344,6 +348,17 @@ function loadPanelWidth(): number {
   }
 }
 
+function downloadJsonFile(filename: string, value: unknown): void {
+  const json = JSON.stringify(value, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
 // --- CollapsibleSection component ---
 
 function CollapsibleSection({
@@ -355,8 +370,8 @@ function CollapsibleSection({
   title: string;
   collapsed: boolean;
   onToggle: () => void;
-  children: React.ReactNode;
-}): React.ReactNode {
+  children: ReactNode;
+}): ReactNode {
   return (
     <section>
       <button
@@ -479,7 +494,17 @@ const styles = `
     overflow-y: auto;
     padding: 24px;
   }
-  .rb-detail-header { margin-bottom: 20px; }
+  .rb-detail-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .rb-detail-summary {
+    min-width: 0;
+    flex: 1;
+  }
   .rb-detail-title {
     display: flex;
     align-items: center;
@@ -491,8 +516,40 @@ const styles = `
     border-radius: 4px;
     font-size: 13px;
   }
-  .rb-detail-title .rb-path { font-size: 16px; font-weight: 600; }
+  .rb-detail-title .rb-path {
+    font-size: 16px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
   .rb-detail-meta { color: #656d76; font-size: 12px; }
+  .rb-detail-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 0;
+  }
+  .rb-detail-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #24292f;
+    background: #ffffff;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .rb-detail-action:hover {
+    background: #f6f8fa;
+    border-color: #8c959f;
+  }
+  .rb-detail-action svg {
+    width: 16px;
+    height: 16px;
+  }
   .rb-detail-panel section { margin-bottom: 20px; }
   .rb-detail-panel section h2 { font-size: 14px; color: #24292f; margin-bottom: 8px; }
   .rb-detail-panel pre {
@@ -517,6 +574,14 @@ const styles = `
     height: 100%;
     color: #656d76;
     font-size: 14px;
+  }
+  @media (max-width: 900px) {
+    .rb-detail-header {
+      flex-direction: column;
+    }
+    .rb-detail-actions {
+      width: 100%;
+    }
   }
 
   /* View tabs - Linear style */
@@ -909,7 +974,7 @@ const styles = `
 
 // --- Main component ---
 
-export default function RequestBinPage(): React.ReactNode {
+export default function RequestBinPage(): ReactNode {
   const [requests, setRequests] = useState<CapturedRequest[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -1093,6 +1158,10 @@ export default function RequestBinPage(): React.ReactNode {
   }, [filterState, searchState]);
 
   const selected = displayedRequests[selectedIndex] ?? null;
+
+  const handleDownloadRequest = useCallback((request: CapturedRequest) => {
+    downloadJsonFile(`requestbin-request-${request.method.toLowerCase()}-${request.id}.json`, request);
+  }, []);
 
   // --- Filter handlers ---
 
@@ -1311,35 +1380,18 @@ export default function RequestBinPage(): React.ReactNode {
     });
   }, [savedViews]);
 
-  const handleExportViews = useCallback(() => {
-    if (savedViews.length === 0) return;
-    const json = JSON.stringify(savedViews, null, 2);
-    const blob = new Blob([json], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    const date = new Date().toISOString().slice(0, 10);
-    a.download = `requestbin-views-${date}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }, [savedViews]);
-
   const handleExportSingleView = useCallback((viewId: string) => {
     const view = savedViews.find((v) => v.id === viewId);
     if (!view) return;
-    const json = JSON.stringify([view], null, 2);
-    const blob = new Blob([json], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
     const date = new Date().toISOString().slice(0, 10);
-    a.download = `requestbin-view-${view.name.replace(/\s+/g, "-").toLowerCase()}-${date}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadJsonFile(
+      `requestbin-view-${view.name.replace(/\s+/g, "-").toLowerCase()}-${date}.json`,
+      [view],
+    );
     setTabContextMenuId(null);
   }, [savedViews]);
 
-  const handleImportViews = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportViews = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -1373,7 +1425,7 @@ export default function RequestBinPage(): React.ReactNode {
 
   // --- Resize handlers ---
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+  const handleMouseDown = useCallback((e: ReactMouseEvent) => {
     e.preventDefault();
     isDragging.current = true;
     setIsDraggingState(true);
@@ -1424,7 +1476,7 @@ export default function RequestBinPage(): React.ReactNode {
 
   // --- Open filter dropdown from a [+] button ---
 
-  function openDropdownFromButton(e: React.MouseEvent<HTMLButtonElement>, groupId: string | null) {
+  function openDropdownFromButton(e: ReactMouseEvent<HTMLButtonElement>, groupId: string | null) {
     const rect = (e.currentTarget as HTMLButtonElement).getBoundingClientRect();
     const dropdownWidth = 220;
     const left = rect.right + dropdownWidth > window.innerWidth
@@ -1439,7 +1491,7 @@ export default function RequestBinPage(): React.ReactNode {
 
   // --- Render filter tree (vertical layout) ---
 
-  function renderFilterTree(): React.ReactNode {
+  function renderFilterTree(): ReactNode {
     const hasFilters = allFilters.length > 0;
 
     if (!hasFilters) {
@@ -1460,7 +1512,7 @@ export default function RequestBinPage(): React.ReactNode {
     }
 
     // Has filters: vertical tree
-    const rows: React.ReactNode[] = [];
+    const rows: ReactNode[] = [];
     const multipleGroups = filterState.groups.length > 1;
 
     filterState.groups.forEach((group, groupIdx) => {
@@ -1638,7 +1690,7 @@ export default function RequestBinPage(): React.ReactNode {
 
   // --- Render filter dropdown (fixed positioning) ---
 
-  function renderFilterDropdown(): React.ReactNode {
+  function renderFilterDropdown(): ReactNode {
     if (!filterDropdownOpen || !dropdownPosition) return null;
 
     return (
@@ -1743,7 +1795,7 @@ export default function RequestBinPage(): React.ReactNode {
     );
   }
 
-  function renderOperatorInput(field: FilterField, operator: FilterOperator): React.ReactNode {
+  function renderOperatorInput(field: FilterField, operator: FilterOperator): ReactNode {
     if (field === "method") {
       if (operator === "is") {
         return (
@@ -2055,14 +2107,27 @@ export default function RequestBinPage(): React.ReactNode {
             {selected ? (
               <>
                 <div className="rb-detail-header">
-                  <div className="rb-detail-title">
-                    <span className={`rb-method rb-method-${selected.method.toLowerCase()}`}>
-                      {selected.method}
-                    </span>
-                    <span className="rb-path">{selected.path}</span>
+                  <div className="rb-detail-summary">
+                    <div className="rb-detail-title">
+                      <span className={`rb-method rb-method-${selected.method.toLowerCase()}`}>
+                        {selected.method}
+                      </span>
+                      <span className="rb-path">{selected.path}</span>
+                    </div>
+                    <div className="rb-detail-meta">
+                      {selected.timestamp} &middot; ID: {selected.id}
+                    </div>
                   </div>
-                  <div className="rb-detail-meta">
-                    {selected.timestamp} &middot; ID: {selected.id}
+                  <div className="rb-detail-actions">
+                    <button
+                      type="button"
+                      className="rb-detail-action"
+                      onClick={() => handleDownloadRequest(selected)}
+                      aria-label="Download request JSON"
+                      title="Download request JSON"
+                    >
+                      <FiDownload aria-hidden="true" />
+                    </button>
                   </div>
                 </div>
                 <CollapsibleSection
