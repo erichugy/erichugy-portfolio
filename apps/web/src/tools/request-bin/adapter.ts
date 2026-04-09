@@ -1,6 +1,7 @@
 import { type NextRequest } from "next/server";
 
 import { addRequest, generateId } from "./index";
+import { redactCapturedRequest } from "./redact";
 import { type CapturedRequest } from "./types";
 
 export async function captureFromNextRequest(
@@ -43,6 +44,7 @@ export async function captureFromNextRequest(
     body,
   };
 
-  addRequest(captured);
-  return captured;
+  const redacted = redactCapturedRequest(captured);
+  addRequest(redacted);
+  return redacted;
 }

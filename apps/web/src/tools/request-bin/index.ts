@@ -1,3 +1,4 @@
+import { redactCapturedRequest } from "./redact";
 import { type CapturedRequest } from "./types";
 
 export type { CapturedRequest } from "./types";
@@ -25,7 +26,7 @@ export function addRequest(req: CapturedRequest): void {
 }
 
 export function getRequests(): CapturedRequest[] {
-  return capturedRequests;
+  return capturedRequests.map((request) => redactCapturedRequest(request));
 }
 
 export function clearRequests(): void {
