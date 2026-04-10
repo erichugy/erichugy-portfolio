@@ -99,12 +99,22 @@ export function isValidSavedView(value: unknown): value is SavedView {
     return false;
   }
 
+  const view = value as Record<string, unknown>;
+
   if (!hasStringProp(value, "id") || !hasStringProp(value, "name")) {
     return false;
   }
 
+  if (
+    "filterLogic" in view &&
+    view.filterLogic !== undefined &&
+    (typeof view.filterLogic !== "string" || !FILTER_LOGIC.has(view.filterLogic))
+  ) {
+    return false;
+  }
+
   if ("filterGroups" in value) {
-    const groups = (value as Record<string, unknown>).filterGroups;
+    const groups = view.filterGroups;
 
     if (!Array.isArray(groups)) {
       return false;
@@ -133,7 +143,7 @@ export function isValidSavedView(value: unknown): value is SavedView {
   }
 
   if ("search" in value) {
-    const search = (value as Record<string, unknown>).search;
+    const search = view.search;
 
     if (typeof search !== "object" || search === null) {
       return false;

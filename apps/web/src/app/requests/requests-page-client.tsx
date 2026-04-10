@@ -48,6 +48,7 @@ export function RequestsPageClient() {
     activeFieldMenu,
     activeOperatorMenu,
     addingToGroupId,
+    closeTabContextMenu,
     closeFilterDropdown,
     collapsed,
     dropdownPosition,
@@ -104,6 +105,7 @@ export function RequestsPageClient() {
         onRenameView={renameView}
         onSaveView={saveCurrentView}
         onSwitchView={switchView}
+        onCloseContextMenu={closeTabContextMenu}
         onToggleContextMenu={toggleTabContextMenu}
         savedViews={savedViews}
         tabContextMenuId={tabContextMenuId}

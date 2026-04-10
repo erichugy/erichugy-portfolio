@@ -8,6 +8,7 @@ import type { SavedView } from "../requests-page.types";
 
 type RequestViewsBarProps = {
   activeViewId: string;
+  onCloseContextMenu: () => void;
   onDeleteView: (viewId: string) => void;
   onExportView: (viewId: string) => void;
   onImportViews: (file: File) => void;
@@ -22,6 +23,7 @@ type RequestViewsBarProps = {
 
 export function RequestViewsBar({
   activeViewId,
+  onCloseContextMenu,
   onDeleteView,
   onExportView,
   onImportViews,
@@ -78,24 +80,45 @@ export function RequestViewsBar({
               aria-label={`Open actions for ${view.name}`}
               aria-haspopup="menu"
               aria-expanded={tabContextMenuId === view.id}
+              aria-controls={`request-view-menu-${view.id}`}
               onClick={() => onToggleContextMenu(view.id)}
             >
               ⋯
             </button>
           </span>
           {tabContextMenuId === view.id && (
-            <div className="rb-tab-context-menu">
-              <button type="button" onClick={() => onRenameView(view.id)}>
+            <div
+              id={`request-view-menu-${view.id}`}
+              className="rb-tab-context-menu"
+              role="menu"
+              aria-label={`${view.name} actions`}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  event.preventDefault();
+                  onCloseContextMenu();
+                }
+              }}
+            >
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => onRenameView(view.id)}
+              >
                 Rename
               </button>
               <button
                 type="button"
+                role="menuitem"
                 className="rb-danger"
                 onClick={() => onDeleteView(view.id)}
               >
                 Delete
               </button>
-              <button type="button" onClick={() => onExportView(view.id)}>
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => onExportView(view.id)}
+              >
                 Export
               </button>
             </div>

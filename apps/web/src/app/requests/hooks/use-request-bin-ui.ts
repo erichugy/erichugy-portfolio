@@ -169,10 +169,15 @@ export function useRequestBinUi() {
     );
   }, []);
 
+  const closeTabContextMenu = useCallback(() => {
+    setTabContextMenuId(null);
+  }, []);
+
   return {
     activeFieldMenu,
     activeOperatorMenu,
     addingToGroupId,
+    closeTabContextMenu,
     closeFilterDropdown,
     collapsed,
     dropdownPosition,
