@@ -3,9 +3,8 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
+import NavLink from "@/components/NavLink";
 import { NAV_LINKS } from "@/data/navigation";
-
-import NavLink from "./NavLink";
 
 type MobileNavigationProps = {
   isOpen: boolean;
@@ -53,6 +52,7 @@ export default function MobileNavigation({
 
       {/* Drawer Panel */}
       <div
+        id="mobile-navigation"
         role="dialog"
         aria-modal="true"
         aria-label="Navigation menu"

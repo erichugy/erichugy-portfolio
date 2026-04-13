@@ -4,10 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import WorkInProgress from "@/components/WorkInProgress";
 import { SHOW_FEATURED_PROJECTS } from "@/config/feature-flags";
 import { PROJECTS } from "@/data/projects";
-
-import WorkInProgress from "./WorkInProgress";
 
 const AUTOPLAY_DELAY_MS = 4500;
 

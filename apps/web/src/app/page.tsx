@@ -1,9 +1,10 @@
-import ContactCTA from "@/components/ContactCTA";
-import Experience from "@/components/Experience";
-import FeaturedProjects from "@/components/FeaturedProjects";
 import Footer from "@/components/Footer";
-import Hero from "@/components/Hero";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/navbar";
+
+import ContactCTA from "./home/ContactCTA";
+import ExperiencePreview from "./home/ExperiencePreview";
+import FeaturedProjects from "./home/FeaturedProjects";
+import Hero from "./home/Hero";
 
 export default function Page() {
   return (
@@ -11,7 +12,7 @@ export default function Page() {
       <Navbar />
       <main>
         <Hero />
-        <Experience />
+        <ExperiencePreview />
         <FeaturedProjects />
         <ContactCTA />
       </main>
