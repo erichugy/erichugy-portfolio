@@ -80,9 +80,7 @@ export const EDUCATION_ENTRIES: EducationEntry[] = [
     degree: "Bachelor of Science in Computer Science, Minor in Management",
     duration: "Sep 2021 - May 2025",
     gpa: "3.85 / 4.00",
-    awards: [
-      "Recipient of McGill Entrance Scholarship (academic excellence)",
-    ],
+    awards: ["Recipient of McGill Entrance Scholarship (academic excellence)"],
     coursework: [
       "Algorithms & Data Structures",
       "Operating Systems",
@@ -156,6 +154,11 @@ export const CERTIFICATIONS: Certification[] = [
     credentialId: "36226",
   },
   {
+    name: "Valuation 1: DCF Training",
+    issuer: "The Marquee Group",
+    date: "Oct 2021",
+  },
+  {
     name: "Pandas",
     issuer: "Kaggle",
     date: "Oct 2023",
@@ -164,11 +167,6 @@ export const CERTIFICATIONS: Certification[] = [
     name: "Intro to Machine Learning",
     issuer: "Kaggle",
     date: "Oct 2023",
-  },
-  {
-    name: "Valuation 1: DCF Training",
-    issuer: "The Marquee Group",
-    date: "Oct 2021",
   },
 ];
 
