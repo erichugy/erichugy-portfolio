@@ -11,6 +11,7 @@ export type {
   Certification,
   EducationEntry,
   Language,
+  ProjectEntry,
   VolunteerEntry,
   WorkExperience,
 } from "@/types/about";
@@ -93,7 +94,7 @@ export const EDUCATION_ENTRIES: EducationEntry[] = [
       "Probability & Statistics",
     ],
     clubs: ["Hack4Impact", "GDSC", "BOLT Bootcamps", "MBIA", "MIC"],
-    volunteer: [
+    projects: [
       {
         role: "Full Stack Developer",
         organization: "Hack4Impact McGill — Welcome Collective",
@@ -108,6 +109,8 @@ export const EDUCATION_ENTRIES: EducationEntry[] = [
         description:
           "Developed a real-time decision engine using expectation calculations and opponent modeling, resulting in cash prizes in two competitive rounds of high-stakes play. Integrated a moving average RL concept to adapt strategies based on evolving opponent behaviors, maintaining positive expected value (EV) in dynamic environments.",
       },
+    ],
+    volunteer: [
       {
         role: "VP External",
         organization: "Google Developer Student Clubs (GDSC) McGill",

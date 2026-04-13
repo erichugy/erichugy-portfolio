@@ -1,7 +1,7 @@
 # Update Experience Bullets
 
 ## Objective
-Replace the current experience and project bullet points with the improved versions provided by Eric. Keep the existing timeline/card UI intact and update the shared data source so the experience page reflects the new wording everywhere it is rendered.
+Replace the current experience and project bullet points with the improved versions provided by Eric. Keep the overall experience page structure intact, but add a dedicated projects subsection under education so project entries do not get miscategorized as volunteer work.
 
 ## Base Branch
 `main`
@@ -72,11 +72,13 @@ export const WORK_EXPERIENCES: WorkExperience[] = [
 
 ## Tasks
 1. Update `apps/web/src/data/about.ts` to replace the Botpress, LIDD Consultants, McGill University, Hack4Impact McGill - Welcome Collective, and Turing Poker Bot bullets with the new copy.
-2. Keep the existing render pattern in `apps/web/src/components/WorkExperience.tsx`; do not change the UI unless needed to support the new copy.
-3. Verify the content fits the current schema and does not introduce duplicate or malformed strings.
+2. Keep the existing work experience render pattern in `apps/web/src/components/WorkExperience.tsx`.
+3. Extend the education detail model only as needed to support a separate projects subsection for entries like `Turing Poker Bot`.
+4. Verify the content fits the current schema and does not introduce duplicate or malformed strings.
 
 ## Design / Constraints
 - Preserve the existing experience card structure and timeline interaction.
+- Keep projects visually consistent with the existing education detail timeline instead of introducing a separate page-level layout.
 - Keep content centralized in `apps/web/src/data/about.ts` so the same data feeds both the experience page and any other consumers.
 - Use ASCII punctuation where possible.
 - Avoid creating new files or abstractions for this change.
