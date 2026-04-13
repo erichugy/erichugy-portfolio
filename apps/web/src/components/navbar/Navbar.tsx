@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import NavLink from "@/components/NavLink";
 import { NAV_LINKS } from "@/data/navigation";
@@ -12,6 +12,16 @@ import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+
+  function handleOpen() {
+    setIsOpen(true);
+  }
+
+  function handleClose() {
+    setIsOpen(false);
+    triggerRef.current?.focus();
+  }
 
   return (
     <>
@@ -67,10 +77,19 @@ export default function Navbar() {
 
             {/* Mobile hamburger button */}
             <button
+              ref={triggerRef}
               type="button"
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={() => {
+                if (isOpen) {
+                  handleClose();
+                  return;
+                }
+
+                handleOpen();
+              }}
               aria-label="Toggle navigation menu"
               aria-expanded={isOpen}
+              aria-controls="mobile-navigation"
               className="md:hidden flex items-center justify-center w-9 h-9 rounded-[10px] border border-border text-body hover:text-heading hover:border-accent/50 transition-all"
             >
               {isOpen ? (
@@ -107,7 +126,9 @@ export default function Navbar() {
           </div>
         </nav>
       </header>
-      <MobileNavigation isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      {isOpen ? (
+        <MobileNavigation isOpen={isOpen} onClose={handleClose} />
+      ) : null}
     </>
   );
 }

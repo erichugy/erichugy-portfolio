@@ -8,6 +8,9 @@ import axios from "@/services/axios";
 type Status = "idle" | "sending" | "success" | "error";
 
 const EMAIL = "ehugy.business@gmail.com";
+const NAME_FIELD_ID = "contact-name";
+const EMAIL_FIELD_ID = "contact-email";
+const MESSAGE_FIELD_ID = "contact-message";
 
 export default function ContactCTA() {
   const [name, setName] = useState("");
@@ -96,9 +99,14 @@ export default function ContactCTA() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label htmlFor={NAME_FIELD_ID} className="sr-only">
+                  Your name
+                </label>
                 <input
+                  id={NAME_FIELD_ID}
                   type="text"
                   name="name"
+                  autoComplete="name"
                   required
                   placeholder="Your name"
                   value={name}
@@ -106,9 +114,14 @@ export default function ContactCTA() {
                   disabled={fieldsDisabled}
                   className="w-full bg-page border border-border rounded-[10px] px-4 py-2.5 text-sm text-heading placeholder:text-muted focus:border-accent focus:outline-none transition-colors"
                 />
+                <label htmlFor={EMAIL_FIELD_ID} className="sr-only">
+                  Your email
+                </label>
                 <input
+                  id={EMAIL_FIELD_ID}
                   type="email"
                   name="email"
+                  autoComplete="email"
                   required
                   placeholder="your@email.com"
                   value={email}
@@ -118,7 +131,11 @@ export default function ContactCTA() {
                 />
               </div>
 
+              <label htmlFor={MESSAGE_FIELD_ID} className="sr-only">
+                Tell me about your project
+              </label>
               <textarea
+                id={MESSAGE_FIELD_ID}
                 name="message"
                 required
                 placeholder="Tell me about your project..."
