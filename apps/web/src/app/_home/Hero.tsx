@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import NavLink from "./NavLink";
+import NavLink from "@/components/NavLink";
 
 export default function Hero() {
   return (

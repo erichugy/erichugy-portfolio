@@ -3,9 +3,8 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
+import NavLink from "@/components/NavLink";
 import { NAV_LINKS } from "@/data/navigation";
-
-import NavLink from "./NavLink";
 
 type MobileNavigationProps = {
   isOpen: boolean;

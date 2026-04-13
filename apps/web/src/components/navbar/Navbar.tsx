@@ -4,10 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+import NavLink from "@/components/NavLink";
 import { NAV_LINKS } from "@/data/navigation";
 
 import MobileNavigation from "./MobileNavigation";
-import NavLink from "./NavLink";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {

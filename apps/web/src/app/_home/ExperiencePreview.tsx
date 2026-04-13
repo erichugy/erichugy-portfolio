@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Experience() {
+export default function ExperiencePreview() {
   return (
     <section id="experience" className="px-6 py-20 md:py-28 bg-page-alt">
       <div className="max-w-3xl mx-auto">
