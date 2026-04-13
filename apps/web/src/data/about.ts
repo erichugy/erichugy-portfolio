@@ -11,6 +11,7 @@ export type {
   Certification,
   EducationEntry,
   Language,
+  ProjectEntry,
   VolunteerEntry,
   WorkExperience,
 } from "@/types/about";
@@ -24,24 +25,26 @@ export const WORK_EXPERIENCES: WorkExperience[] = [
       "Building integrations and developer tooling for the Botpress conversational AI platform.",
     techStack: ["TypeScript", "Node.js", "Bun", "Zod", "Slack API"],
     highlights: [
-      "Built an Odoo ERP integration, creating REST endpoints and exposing ERP entities as dynamic bot knowledge; supported $200K+ in enterprise pipeline.",
-      "Extended the Slack integration with cross-channel routing and state correlation, enabling multi-legged conversations with in-thread response reconciliation.",
-      "Built an ADK-based Slack bot that auto-logs ~10 integration requests/week, improving traceability and cutting support-channel noise.",
-      "Hardened the public Botpress ADK CLI (~400 weekly downloads) and refined agent-skill files for Claude Code/LLM workflows.",
+      "Accelerated a $200K+ enterprise pipeline by engineering open-source integrations for Odoo and Slack, leveraging Claude Code to automate test generation and PR drafts.",
+      "Reduced MTTR to <10 minutes (24/7) by architecting a real-time monitoring service using TypeScript and Bun; integrated Sentry and AWS Lambda to automate instant stakeholder alerting.",
+      "Optimized the Botpress Studio export engine to support bots with 5GB+ RAG knowledge bases by parallelizing asset retrieval via Promise.all(), eliminating system timeouts and introducing granular UI controls for selective data export.",
+      "Enhanced enterprise bot accuracy by developing an automated evaluation framework utilizing LLM-as-a-judge to benchmark performance against custom Gold Datasets.",
+      "Improved Developer Experience (DX) for ~400 weekly active users by hardening the Botpress ADK CLI and optimizing agent-skill definitions for Claude Code agentic workflows.",
     ],
   },
   {
     company: "LIDD Consultants",
-    position: "Software Developer",
+    position: "Forward Deployed Developer",
     duration: "May 2023 - Dec 2025",
     description:
       "Built custom ERP solutions and automated enterprise workflows for supply chain and logistics clients.",
     techStack: ["JavaScript", "HTML/CSS", "NetSuite", "REST APIs", "SQL"],
     highlights: [
-      "Automated 20+ accounting and order-to-cash workflows via custom NetSuite pages and Map/Reduce pipelines, processing 100 orders/min.",
-      "Integrated NetSuite with WMS/TMS platforms via REST APIs and data contracts, doubling fulfillment throughput.",
-      "Refactored inefficient JOIN operations and implemented query caching, reducing lookup latency by 65% (~800ms).",
-      "Cut reporting time by 50% through automated custom NetSuite web pages.",
+      "Captured $500K+ in service revenue across 10+ enterprise accounts by leading technical requirements gathering and solution architecting as the primary bridge between engineering and business stakeholders.",
+      "Delivered a custom order-entry application for high-volume retailers, enabling parallel workflows for 5+ concurrent reps and supporting real-time inventory for ~10,000 items.",
+      "Optimized client financial operations by reducing reporting time by 50%, automating 20+ accounting and Order-to-Cash workflows via custom NetSuite pages and Map/Reduce pipelines.",
+      "Architected mission-critical WMS/TMS integrations via REST APIs, scaling client system throughput to 100 orders/min and automating end-to-end logistics fulfillment.",
+      "Improved system responsiveness by 65% (~800ms) for enterprise users by refactoring inefficient database JOIN operations and implementing custom query caching strategies.",
     ],
   },
   {
@@ -52,8 +55,9 @@ export const WORK_EXPERIENCES: WorkExperience[] = [
       "Researched distributed deep reinforcement learning for path-finding in dynamic environments.",
     techStack: ["Python", "PyTorch", "RLlib", "IMPALA", "A3C"],
     highlights: [
-      "Architected a distributed path-finding system using IMPALA and RLlib; proposed a hybrid A*/RL framework for global navigation with local collision avoidance.",
-      "Developed a 'Revolving Mini-Batch' training strategy that eliminated catastrophic forgetting and enabled generalization across distinct obstacle layouts.",
+      "Achieved agent convergence in <15 iterations by architecting a distributed path-finding system (IMPALA/RLlib) that utilized a hybrid A*/RL framework for global navigation and local collision avoidance.",
+      "Eliminated catastrophic forgetting across diverse obstacle layouts by developing a 'Revolving Mini-Batch' training strategy, enabling a single robust policy to generalize across distinct environment states.",
+      "Reduced computational overhead during training by implementing asynchronous gradient updates and V-trace off-policy correction to stabilize multi-agent learning on dynamic 10x10 grids.",
     ],
   },
   {
@@ -76,9 +80,7 @@ export const EDUCATION_ENTRIES: EducationEntry[] = [
     degree: "Bachelor of Science in Computer Science, Minor in Management",
     duration: "Sep 2021 - May 2025",
     gpa: "3.85 / 4.00",
-    awards: [
-      "Recipient of McGill Entrance Scholarship (academic excellence)",
-    ],
+    awards: ["Recipient of McGill Entrance Scholarship (academic excellence)"],
     coursework: [
       "Algorithms & Data Structures",
       "Operating Systems",
@@ -90,14 +92,23 @@ export const EDUCATION_ENTRIES: EducationEntry[] = [
       "Probability & Statistics",
     ],
     clubs: ["Hack4Impact", "GDSC", "BOLT Bootcamps", "MBIA", "MIC"],
-    volunteer: [
+    projects: [
       {
         role: "Full Stack Developer",
         organization: "Hack4Impact McGill — Welcome Collective",
         duration: "Sep 2024 - May 2025",
         description:
-          "Engineered a logistics routing engine using A* to optimize donation pick-up/delivery schedules for 100+ daily clients. Designed a PostgreSQL schema improving item allocation accuracy by 40%.",
+          "Engineered a logistics routing engine using A* to optimize donation pick-up/delivery schedules; enabled managers to coordinate routes for 100+ daily clients to minimize total travel distance and fuel consumption. Designed a PostgreSQL schema to manage real-time inventory and client data, replacing manual workflows with a Dockerized Node.js backend that improved item allocation accuracy by 40%.",
       },
+      {
+        role: "Independent Project",
+        organization: "Turing Poker Bot",
+        duration: "2024",
+        description:
+          "Developed a real-time decision engine using expectation calculations and opponent modeling, resulting in cash prizes in two competitive rounds of high-stakes play. Integrated a moving average RL concept to adapt strategies based on evolving opponent behaviors, maintaining positive expected value (EV) in dynamic environments.",
+      },
+    ],
+    volunteer: [
       {
         role: "VP External",
         organization: "Google Developer Student Clubs (GDSC) McGill",
@@ -143,6 +154,11 @@ export const CERTIFICATIONS: Certification[] = [
     credentialId: "36226",
   },
   {
+    name: "Valuation 1: DCF Training",
+    issuer: "The Marquee Group",
+    date: "Oct 2021",
+  },
+  {
     name: "Pandas",
     issuer: "Kaggle",
     date: "Oct 2023",
@@ -151,11 +167,6 @@ export const CERTIFICATIONS: Certification[] = [
     name: "Intro to Machine Learning",
     issuer: "Kaggle",
     date: "Oct 2023",
-  },
-  {
-    name: "Valuation 1: DCF Training",
-    issuer: "The Marquee Group",
-    date: "Oct 2021",
   },
 ];
 

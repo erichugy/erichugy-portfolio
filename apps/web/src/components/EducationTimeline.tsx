@@ -26,6 +26,56 @@ function ChevronIcon({ expanded }: { expanded: boolean }) {
   );
 }
 
+type DetailEntry = {
+  role: string;
+  organization: string;
+  duration: string;
+  description: string;
+};
+
+function DetailSection({
+  title,
+  entries,
+}: {
+  title: string;
+  entries: DetailEntry[];
+}) {
+  return (
+    <div>
+      <p className="font-mono text-xs text-muted mb-3">{title}</p>
+      <div className="relative">
+        <div className="absolute left-[7px] top-2 bottom-2 w-[1.5px] bg-accent/20" />
+
+        <div className="space-y-4">
+          {entries.map((entry, index) => (
+            <div key={index} className="relative pl-7">
+              <div className="absolute left-0 top-[8px] w-[16px] h-[16px] rounded-full border-[2px] border-accent/60 bg-page" />
+
+              <div>
+                <p className="text-sm font-semibold text-heading">
+                  {entry.role}
+                </p>
+                <p className="text-sm text-body">
+                  {entry.organization}
+                  {SHOW_DATES && (
+                    <span className="font-mono text-xs">
+                      {" "}
+                      &middot; {entry.duration}
+                    </span>
+                  )}
+                </p>
+                <p className="text-sm text-body mt-1 leading-relaxed">
+                  {entry.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function EducationTimeline() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
@@ -52,6 +102,7 @@ export default function EducationTimeline() {
               const hasExpandableContent =
                 (entry.coursework && entry.coursework.length > 0) ||
                 (entry.clubs && entry.clubs.length > 0) ||
+                (entry.projects && entry.projects.length > 0) ||
                 (entry.volunteer && entry.volunteer.length > 0);
 
               return (
@@ -180,45 +231,19 @@ export default function EducationTimeline() {
                                 </div>
                               )}
 
+                              {entry.projects && entry.projects.length > 0 && (
+                                <DetailSection
+                                  title="Projects"
+                                  entries={entry.projects}
+                                />
+                              )}
+
                               {entry.volunteer &&
                                 entry.volunteer.length > 0 && (
-                                  <div>
-                                    <p className="font-mono text-xs text-muted mb-3">
-                                      Volunteer &amp; Club Work
-                                    </p>
-                                    <div className="relative">
-                                      <div className="absolute left-[7px] top-2 bottom-2 w-[1.5px] bg-accent/20" />
-
-                                      <div className="space-y-4">
-                                        {entry.volunteer.map((vol, vIndex) => (
-                                          <div
-                                            key={vIndex}
-                                            className="relative pl-7"
-                                          >
-                                            <div className="absolute left-0 top-[8px] w-[16px] h-[16px] rounded-full border-[2px] border-accent/60 bg-page" />
-
-                                            <div>
-                                              <p className="text-sm font-semibold text-heading">
-                                                {vol.role}
-                                              </p>
-                                              <p className="text-sm text-body">
-                                                {vol.organization}
-                                                {SHOW_DATES && (
-                                                  <span className="font-mono text-xs">
-                                                    {" "}
-                                                    &middot; {vol.duration}
-                                                  </span>
-                                                )}
-                                              </p>
-                                              <p className="text-sm text-body mt-1 leading-relaxed">
-                                                {vol.description}
-                                              </p>
-                                            </div>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    </div>
-                                  </div>
+                                  <DetailSection
+                                    title="Volunteer & Club Work"
+                                    entries={entry.volunteer}
+                                  />
                                 )}
                             </div>
                           </div>

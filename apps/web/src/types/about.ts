@@ -18,6 +18,14 @@ export const volunteerEntrySchema = z.object({
 });
 export type VolunteerEntry = z.infer<typeof volunteerEntrySchema>;
 
+export const projectEntrySchema = z.object({
+  role: z.string(),
+  organization: z.string(),
+  duration: z.string(),
+  description: z.string(),
+});
+export type ProjectEntry = z.infer<typeof projectEntrySchema>;
+
 export const educationEntrySchema = z.object({
   school: z.string(),
   degree: z.string(),
@@ -26,6 +34,7 @@ export const educationEntrySchema = z.object({
   awards: z.array(z.string()).optional(),
   coursework: z.array(z.string()).optional(),
   clubs: z.array(z.string()).optional(),
+  projects: z.array(projectEntrySchema).optional(),
   volunteer: z.array(volunteerEntrySchema).optional(),
 });
 export type EducationEntry = z.infer<typeof educationEntrySchema>;
