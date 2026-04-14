@@ -20,7 +20,7 @@ export const PROJECTS: readonly Project[] = [
       "An autonomous Texas Hold'em poker bot built for the McGill Physics Hackathon.",
     longDescription:
       "Developed for the McGill Physics Hackathon/Tournament, this poker bot plays Texas Hold'em autonomously. The core logic analyzes pot odds, estimates opponent hand ranges, and simulates win probabilities in real time. It adapts to table dynamics by modeling opponent behavior and shifting between conservative and aggressive playstyles, qualifying for cash prizes in two separate rounds.",
-    image: "/inspiration.png",
+    image: "/turing-poker-bot-thumbnail.png",
     techStack: [
       "Python",
       "Probability Theory",

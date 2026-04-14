@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import TechPill from "@/components/TechPill";
@@ -12,16 +13,28 @@ export default function FeaturedProject({ project }: FeaturedProjectProps) {
   return (
     <div className="card-glow overflow-hidden rounded-xl border border-border bg-card shadow-[0_2px_8px_rgba(12,27,33,0.06)]">
       <div className="grid md:grid-cols-2">
-        <div
-          className={`flex h-56 items-center justify-center text-7xl md:h-auto ${project.imageBackgroundClassName}`}
-          aria-hidden="true"
-        >
-          {project.emoji ? (
-            <span className="select-none opacity-80 drop-shadow-lg">
-              {project.emoji}
-            </span>
-          ) : null}
-        </div>
+        {project.image ? (
+          <div className="relative h-56 overflow-hidden bg-white md:h-auto">
+            <Image
+              src={project.image}
+              alt={project.title}
+              fill
+              className="object-contain p-6"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </div>
+        ) : (
+          <div
+            className={`flex h-56 items-center justify-center text-7xl md:h-auto ${project.imageBackgroundClassName}`}
+            aria-hidden="true"
+          >
+            {project.emoji ? (
+              <span className="select-none opacity-80 drop-shadow-lg">
+                {project.emoji}
+              </span>
+            ) : null}
+          </div>
+        )}
 
         <div className="flex flex-col p-6 md:p-8">
           <h3 className="mb-3 text-2xl font-bold text-heading md:text-3xl">
