@@ -1,7 +1,6 @@
 import { MarkerType, type Edge } from "@xyflow/react";
 
 import {
-  CARDINALITY_LABELS,
   measureNodeHeight,
   NODE_WIDTH,
   type DiagramRelation,
@@ -12,6 +11,10 @@ import {
 import type { ErdSelection, RelationEdgeData, TableNode } from "../sql-erd.types";
 
 const HANDLE_SEPARATOR = "::";
+
+// Hoisted so every rebuild reuses one object: a fresh marker each render churns
+// React Flow's marker definitions and makes the arrowheads flicker.
+const ARROW_MARKER = { type: MarkerType.ArrowClosed, width: 14, height: 14 } as const;
 
 export function makeHandleId(columnName: string, side: "left" | "right"): string {
   return `${columnName}${HANDLE_SEPARATOR}${side}`;
@@ -93,6 +96,7 @@ export function buildNodes(options: BuildNodesOptions): TableNode[] {
 
   return tables.map((table) => {
     const collapsed = collapsedTableIds.has(table.id);
+    const height = measureNodeHeight(table, collapsed);
 
     return {
       id: table.id,
@@ -104,7 +108,11 @@ export function buildNodes(options: BuildNodesOptions): TableNode[] {
       deletable: false,
       // Declared rather than measured so the minimap and auto-layout agree with the DOM.
       width: NODE_WIDTH,
-      height: measureNodeHeight(table, collapsed),
+      height,
+      // `measured` must be set too: React Flow drops a node's cached handle bounds
+      // whenever a node object changes without it, so every drag frame would leave the
+      // dragged node's edges unable to resolve their endpoints, unmounting them.
+      measured: { width: NODE_WIDTH, height },
       data: {
         table,
         accent: accentByFileId[table.fileId] ?? "#0EA5C9",
@@ -132,7 +140,8 @@ export function buildEdges({ relations, positions, selection }: BuildEdgesOption
 
     const sourceColumn = relation.sourceColumns[0] ?? "";
     const targetColumn = relation.targetColumns[0] ?? "";
-    const label = relation.label?.trim() || CARDINALITY_LABELS[relation.cardinality];
+    // Cardinality now reads off the edge ends, so the midpoint carries only a custom label.
+    const label = relation.label?.trim() ?? "";
     const isSelected = selection.kind === "relation" && selection.id === relation.id;
     const isDimmed =
       selection.kind === "table" &&
@@ -148,7 +157,7 @@ export function buildEdges({ relations, positions, selection }: BuildEdgesOption
       targetHandle: makeHandleId(targetColumn, targetIsRight ? "left" : "right"),
       selected: isSelected,
       reconnectable: true,
-      markerEnd: { type: MarkerType.ArrowClosed, width: 14, height: 14 },
+      markerEnd: ARROW_MARKER,
       data: { relation, label },
       className: isDimmed ? "erd-edge-dimmed" : undefined,
     };

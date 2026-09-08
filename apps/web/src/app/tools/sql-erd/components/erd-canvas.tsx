@@ -69,18 +69,12 @@ export default function ErdCanvas({
 
   const collapsedSet = useMemo(() => new Set(collapsedTableIds), [collapsedTableIds]);
 
-  // Edges follow the live positions so they swap sides mid-drag.
-  const livePositions = useMemo(
-    () => ({ ...positions, ...dragPositions }),
-    [positions, dragPositions],
-  );
-
-  const nodes = useMemo(
+  const baseNodes = useMemo(
     () =>
       buildNodes({
         tables,
         relations,
-        positions: livePositions,
+        positions,
         collapsedTableIds: collapsedSet,
         accentByFileId,
         nameByFileId,
@@ -90,7 +84,7 @@ export default function ErdCanvas({
     [
       tables,
       relations,
-      livePositions,
+      positions,
       collapsedSet,
       accentByFileId,
       nameByFileId,
@@ -99,9 +93,24 @@ export default function ErdCanvas({
     ],
   );
 
+  // Only the nodes actually being dragged get a new object, so every other node
+  // keeps its identity and skips re-rendering for the length of the drag.
+  const nodes = useMemo(() => {
+    if (!Object.keys(dragPositions).length) {
+      return baseNodes;
+    }
+
+    return baseNodes.map((node) =>
+      dragPositions[node.id] ? { ...node, position: dragPositions[node.id] } : node,
+    );
+  }, [baseNodes, dragPositions]);
+
+  // Deliberately keyed to the committed positions, not the live drag ones: React Flow
+  // derives edge geometry from the node store, so rebuilding this array mid-drag only
+  // churns edge elements and flips handle sides as nodes cross, which reads as flicker.
   const edges = useMemo(
-    () => buildEdges({ relations, positions: livePositions, selection }),
-    [relations, livePositions, selection],
+    () => buildEdges({ relations, positions, selection }),
+    [relations, positions, selection],
   );
 
   useEffect(() => {
@@ -254,7 +263,6 @@ export default function ErdCanvas({
       deleteKeyCode={DELETE_KEYS}
       nodesDraggable
       nodesConnectable
-      elevateEdgesOnSelect
       minZoom={0.1}
       maxZoom={2}
       proOptions={{ hideAttribution: false }}

@@ -239,7 +239,7 @@ export default function ErdInspector({
               <input
                 className={SELECT_CLASS}
                 value={relation.label ?? ""}
-                placeholder={CARDINALITY_LABELS[relation.cardinality]}
+                placeholder="optional, shown mid-edge"
                 onChange={(event) => onUpdateRelation(relation, { label: event.target.value })}
               />
             </div>

@@ -17,6 +17,14 @@ export const CARDINALITY_LABELS: Record<RelationCardinality, string> = {
   "many-to-many": "N:N",
 };
 
+/** The symbol shown at each end of an edge, as [source end, target end]. */
+export const CARDINALITY_ENDPOINTS: Record<RelationCardinality, readonly [string, string]> = {
+  "one-to-one": ["1", "1"],
+  "one-to-many": ["1", "N"],
+  "many-to-one": ["N", "1"],
+  "many-to-many": ["N", "N"],
+};
+
 /**
  * Manual relations get an opaque id rather than a content-derived one: the user can
  * repoint an endpoint, and the edge has to keep its identity (and overrides) across that.

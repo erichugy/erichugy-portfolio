@@ -19,7 +19,12 @@ export {
 
 export { parseSqlFiles } from "./parser";
 
-export { CARDINALITY_LABELS, createManualRelationId, resolveRelations } from "./relations";
+export {
+  CARDINALITY_ENDPOINTS,
+  CARDINALITY_LABELS,
+  createManualRelationId,
+  resolveRelations,
+} from "./relations";
 export type { DiagramRelation } from "./relations";
 
 export { SAMPLE_SCHEMAS } from "./sample";
