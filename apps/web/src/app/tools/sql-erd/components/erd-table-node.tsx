@@ -53,7 +53,8 @@ function ColumnHandles({ columnName, hidden }: ColumnHandlesProps) {
 }
 
 function ErdTableNode({ data, selected }: NodeProps<TableNode>) {
-  const { table, accent, fileName, collapsed, connectedColumns, highlighted, dimmed } = data;
+  const { table, accent, fileName, collapsed, connectedColumns, selectedColumn, highlighted, dimmed } =
+    data;
 
   return (
     <div
@@ -88,13 +89,17 @@ function ErdTableNode({ data, selected }: NodeProps<TableNode>) {
         <div style={{ paddingTop: NODE_PADDING, paddingBottom: NODE_PADDING }}>
           {table.columns.map((column) => {
             const isConnected = connectedColumns.has(column.name.toLowerCase());
+            const isSelected = column.name === selectedColumn;
 
             return (
+              // The canvas reads this attribute on click to resolve which column was
+              // hit, which keeps the click handler out of node data and stable.
               <div
                 key={column.name}
-                className={`relative flex items-center justify-between gap-2 px-3 ${
-                  isConnected ? "text-heading" : "text-body"
-                }`}
+                data-erd-column={column.name}
+                className={`relative flex cursor-pointer items-center justify-between gap-2 px-3 ${
+                  isSelected ? "bg-accent/15 text-heading" : isConnected ? "text-heading" : "text-body"
+                } hover:bg-accent/10`}
                 style={{ height: NODE_ROW_HEIGHT }}
                 title={column.comment ?? column.type}
               >

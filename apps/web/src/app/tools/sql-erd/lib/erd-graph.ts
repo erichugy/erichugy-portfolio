@@ -8,7 +8,7 @@ import {
   type ParsedTable,
 } from "@/tools/sql-erd";
 
-import type { ErdSelection, RelationEdgeData, TableNode } from "../sql-erd.types";
+import { selectionTableId, type ErdSelection, type RelationEdgeData, type TableNode } from "../sql-erd.types";
 
 const HANDLE_SEPARATOR = "::";
 
@@ -47,15 +47,17 @@ function computeHighlightedTables(
   relations: DiagramRelation[],
   selection: ErdSelection,
 ): Set<string> | null {
-  if (selection.kind === "table") {
-    const highlighted = new Set<string>([selection.id]);
+  const tableId = selectionTableId(selection);
+
+  if (tableId) {
+    const highlighted = new Set<string>([tableId]);
 
     for (const relation of relations) {
-      if (relation.sourceTable === selection.id) {
+      if (relation.sourceTable === tableId) {
         highlighted.add(relation.targetTable);
       }
 
-      if (relation.targetTable === selection.id) {
+      if (relation.targetTable === tableId) {
         highlighted.add(relation.sourceTable);
       }
     }
@@ -104,7 +106,7 @@ export function buildNodes(options: BuildNodesOptions): TableNode[] {
       position: positions[table.id] ?? { x: 0, y: 0 },
       selected:
         options.selectedNodeIds.has(table.id) ||
-        (options.selection.kind === "table" && options.selection.id === table.id),
+        selectionTableId(options.selection) === table.id,
       deletable: false,
       // Declared rather than measured so the minimap and auto-layout agree with the DOM.
       width: NODE_WIDTH,
@@ -119,6 +121,10 @@ export function buildNodes(options: BuildNodesOptions): TableNode[] {
         fileName: nameByFileId[table.fileId] ?? "unknown",
         collapsed,
         connectedColumns: connectedColumns.get(table.id) ?? new Set<string>(),
+        selectedColumn:
+          options.selection.kind === "column" && options.selection.tableId === table.id
+            ? options.selection.columnName
+            : null,
         highlighted: highlighted?.has(table.id) ?? false,
         dimmed: highlighted ? !highlighted.has(table.id) : false,
       },
@@ -143,10 +149,11 @@ export function buildEdges({ relations, positions, selection }: BuildEdgesOption
     // Cardinality now reads off the edge ends, so the midpoint carries only a custom label.
     const label = relation.label?.trim() ?? "";
     const isSelected = selection.kind === "relation" && selection.id === relation.id;
+    const focusedTable = selectionTableId(selection);
     const isDimmed =
-      selection.kind === "table" &&
-      relation.sourceTable !== selection.id &&
-      relation.targetTable !== selection.id;
+      focusedTable !== null &&
+      relation.sourceTable !== focusedTable &&
+      relation.targetTable !== focusedTable;
 
     return {
       id: relation.id,

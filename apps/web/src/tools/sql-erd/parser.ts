@@ -142,6 +142,11 @@ class TokenCursor {
     return inner;
   }
 
+  /** Wraps the contents of the next `( ... )` group in its own cursor. */
+  enterParenGroup(): TokenCursor {
+    return new TokenCursor(this.readParenGroup());
+  }
+
   /** Skips tokens until the next top-level keyword the caller cares about. */
   skipUntilKeyword(stopWords: Set<string>): void {
     while (!this.done) {
@@ -235,6 +240,44 @@ function readColumnList(tokens: Token[]): string[] {
     .map((group) => group.find(isNameToken))
     .filter((token): token is Token => Boolean(token))
     .map((token) => token.value);
+}
+
+/** Rebuilds an expression's source text, stopping at the next column modifier. */
+function readExpressionText(cursor: TokenCursor, stopWords: Set<string>): string {
+  let text = "";
+
+  const append = (piece: string, spaced: boolean) => {
+    text += text && spaced ? ` ${piece}` : piece;
+  };
+
+  while (!cursor.done) {
+    const token = cursor.peek();
+
+    if (!token || (token.kind === "punct" && token.value === ",")) {
+      break;
+    }
+
+    if (token.kind === "word" && stopWords.has(token.upper)) {
+      break;
+    }
+
+    if (token.kind === "punct" && token.value === "(") {
+      append(`(${readExpressionText(cursor.enterParenGroup(), new Set())})`, false);
+      continue;
+    }
+
+    cursor.next();
+
+    if (token.kind === "string") {
+      append(`'${token.value}'`, true);
+    } else if (token.kind === "punct") {
+      append(token.value, false);
+    } else {
+      append(token.value, true);
+    }
+  }
+
+  return text.trim();
 }
 
 function readTypeText(cursor: TokenCursor): string {
@@ -418,9 +461,15 @@ function parseColumnDefinition(tokens: Token[]): ColumnDefinitionResult | null {
 
 
     if (cursor.matchWords("DEFAULT")) {
+      const expression = readExpressionText(cursor, COLUMN_MODIFIER_KEYWORDS);
+
       // `DEFAULT NULL` is the absence of a default, not a default value.
-      column.hasDefault = !cursor.isWord("NULL");
-      cursor.skipUntilKeyword(COLUMN_MODIFIER_KEYWORDS);
+      column.hasDefault = Boolean(expression) && expression.toUpperCase() !== "NULL";
+
+      if (column.hasDefault) {
+        column.defaultExpression = expression;
+      }
+
       continue;
     }
 
@@ -567,8 +616,8 @@ interface ParseContext {
   tables: Map<string, ParsedTable>;
   foreignKeys: PendingForeignKey[];
   issues: ParseIssue[];
-  /** Names declared by CREATE TYPE ... AS ENUM, so columns using them read as "enum". */
-  enumTypes: Set<string>;
+  /** Values declared by CREATE TYPE ... AS ENUM, keyed by lowercased type name. */
+  enumTypes: Map<string, string[]>;
 }
 
 function parseCreateTable(cursor: TokenCursor, fileId: string, context: ParseContext): void {
@@ -911,7 +960,12 @@ function parseStatement(tokens: Token[], fileId: string, context: ParseContext):
       const typeName = readQualifiedName(cursor);
 
       if (typeName && cursor.matchWords("AS") && cursor.matchWords("ENUM")) {
-        context.enumTypes.add(typeName.name.toLowerCase());
+        const values = cursor
+          .readParenGroup()
+          .filter((token) => token.kind === "string")
+          .map((token) => token.value);
+
+        context.enumTypes.set(typeName.name.toLowerCase(), values);
       }
     }
 
@@ -979,7 +1033,7 @@ export function parseSqlFiles(sources: SqlSource[]): ParsedSchema {
     tables: new Map(),
     foreignKeys: [],
     issues: [],
-    enumTypes: new Set(),
+    enumTypes: new Map(),
   };
 
   for (const source of sources) {
@@ -1001,8 +1055,11 @@ export function parseSqlFiles(sources: SqlSource[]): ParsedSchema {
       for (const column of table.columns) {
         const baseType = column.type.split("(")[0].split(".").pop()?.trim() ?? "";
 
-        if (context.enumTypes.has(baseType)) {
+        const enumValues = context.enumTypes.get(baseType);
+
+        if (enumValues) {
           column.displayType = "enum";
+          column.enumValues = enumValues;
         }
       }
     }

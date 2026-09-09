@@ -13,7 +13,11 @@ export interface ParsedColumn {
   isPrimaryKey: boolean;
   isUnique: boolean;
   hasDefault: boolean;
+  /** The default as written, e.g. "now()" or "'draft'". */
+  defaultExpression?: string;
   isAutoIncrement: boolean;
+  /** Allowed values, when the column's type is an enum declared in the SQL. */
+  enumValues?: readonly string[];
   comment?: string;
 }
 

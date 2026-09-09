@@ -34,6 +34,7 @@ export { erdDocumentSchema } from "./types";
 export type {
   ErdDocument,
   NodePosition,
+  ParsedColumn,
   ParseIssue,
   ParsedTable,
   RelationCardinality,

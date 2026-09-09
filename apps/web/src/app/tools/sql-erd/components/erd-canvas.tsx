@@ -252,7 +252,16 @@ export default function ErdCanvas({
         });
         onPositionsChange(committed);
       }}
-      onNodeClick={(_event, node) => onSelectionChange({ kind: "table", id: node.id })}
+      onNodeClick={(event, node) => {
+        const row = (event.target as HTMLElement | null)?.closest?.("[data-erd-column]");
+        const columnName = row?.getAttribute("data-erd-column");
+
+        onSelectionChange(
+          columnName
+            ? { kind: "column", tableId: node.id, columnName }
+            : { kind: "table", id: node.id },
+        );
+      }}
       onNodeDoubleClick={(_event, node) => onToggleCollapsed(node.id)}
       onEdgeClick={(_event, edge) => onSelectionChange({ kind: "relation", id: edge.id })}
       onPaneClick={() => onSelectionChange({ kind: "none" })}
