@@ -54,6 +54,9 @@ const TABLE_CONSTRAINT_KEYWORDS = new Set([
   "PERIOD",
 ]);
 
+/** A CHECK only enumerates values when it tests membership. */
+const CHECK_VALUE_MARKERS = new Set(["IN", "ANY"]);
+
 /** Types whose declaration implies both NOT NULL-able identity and a server default. */
 const SERIAL_TYPES = new Set(["serial", "bigserial", "smallserial", "serial4", "serial8"]);
 
@@ -166,6 +169,60 @@ class TokenCursor {
       }
 
       this.next();
+    }
+  }
+}
+
+/**
+ * Pulls the allowed values out of a membership CHECK. Handles both the hand-written
+ * `col IN ('a','b')` and the `(col)::text = ANY (ARRAY['a'::text])` that pg_dump emits.
+ */
+function readCheckConstraint(tokens: Token[]): { columnNames: string[]; values: string[] } {
+  const markerIndex = tokens.findIndex(
+    (token) => token.kind === "word" && CHECK_VALUE_MARKERS.has(token.upper),
+  );
+
+  if (markerIndex === -1) {
+    return { columnNames: [], values: [] };
+  }
+
+  // Whatever is being tested appears to the left of IN/ANY; the caller decides which
+  // of those names is actually one of the table's columns.
+  const columnNames = tokens
+    .slice(0, markerIndex)
+    .filter((token) => token.kind === "ident" || token.kind === "word")
+    .map((token) => token.value);
+
+  const values: string[] = [];
+  const seen = new Set<string>();
+
+  for (const token of tokens.slice(markerIndex)) {
+    if (token.kind === "string" && !seen.has(token.value)) {
+      seen.add(token.value);
+      values.push(token.value);
+    }
+  }
+
+  return { columnNames, values };
+}
+
+/** Attaches CHECK values to whichever of the table's columns the constraint names. */
+function applyCheckConstraint(
+  table: ParsedTable,
+  check: { columnNames: string[]; values: string[] },
+): void {
+  if (!check.values.length) {
+    return;
+  }
+
+  for (const candidate of check.columnNames) {
+    const column = table.columns.find(
+      (entry) => entry.name.toLowerCase() === candidate.toLowerCase(),
+    );
+
+    if (column) {
+      column.checkValues = check.values;
+      return;
     }
   }
 }
@@ -513,6 +570,16 @@ function parseColumnDefinition(tokens: Token[]): ColumnDefinitionResult | null {
       continue;
     }
 
+    if (cursor.matchWords("CHECK")) {
+      const { values } = readCheckConstraint(cursor.readParenGroup());
+
+      if (values.length) {
+        column.checkValues = values;
+      }
+
+      continue;
+    }
+
     // Anything else (CHECK, COLLATE, storage hints) does not affect the diagram.
     cursor.next();
   }
@@ -521,6 +588,7 @@ function parseColumnDefinition(tokens: Token[]): ColumnDefinitionResult | null {
 }
 
 interface TableConstraintResult {
+  check?: { columnNames: string[]; values: string[] };
   primaryKey?: string[];
   unique?: ParsedIndex;
   index?: ParsedIndex;
@@ -535,6 +603,10 @@ function parseTableConstraint(tokens: Token[]): TableConstraintResult | null {
     if (isNameToken(cursor.peek()) && !TABLE_CONSTRAINT_KEYWORDS.has(cursor.peek()!.upper)) {
       constraintName = cursor.next()!.value;
     }
+  }
+
+  if (cursor.matchWords("CHECK")) {
+    return { check: readCheckConstraint(cursor.readParenGroup()) };
   }
 
   if (cursor.matchWords("PRIMARY", "KEY")) {
@@ -650,6 +722,8 @@ function parseCreateTable(cursor: TokenCursor, fileId: string, context: ParseCon
     isStub: false,
   };
 
+  const pendingChecks: { columnNames: string[]; values: string[] }[] = [];
+
   for (const entry of splitTopLevel(body)) {
     if (!entry.length) {
       continue;
@@ -663,6 +737,10 @@ function parseCreateTable(cursor: TokenCursor, fileId: string, context: ParseCon
 
       if (!constraint) {
         continue;
+      }
+
+      if (constraint.check) {
+        pendingChecks.push(constraint.check);
       }
 
       if (constraint.primaryKey) {
@@ -716,6 +794,10 @@ function parseCreateTable(cursor: TokenCursor, fileId: string, context: ParseCon
         fileId,
       });
     }
+  }
+
+  for (const check of pendingChecks) {
+    applyCheckConstraint(table, check);
   }
 
   const existing = context.tables.get(tableId);
@@ -809,6 +891,11 @@ function parseAlterTable(cursor: TokenCursor, fileId: string, context: ParseCont
       continue;
     }
 
+    if (constraint?.check) {
+      applyCheckConstraint(table, constraint.check);
+      continue;
+    }
+
     if (constraint?.primaryKey) {
       table.primaryKey = constraint.primaryKey;
 
@@ -831,6 +918,14 @@ function parseAlterTable(cursor: TokenCursor, fileId: string, context: ParseCont
 
     if (constraint?.index) {
       table.indexes.push(constraint.index);
+      continue;
+    }
+
+    // Without this guard an unrecognised constraint clause would be read as a column
+    // definition, inventing a column named CONSTRAINT typed as the constraint's name.
+    const leading = rest[0];
+
+    if (leading?.kind === "word" && TABLE_CONSTRAINT_KEYWORDS.has(leading.upper)) {
       continue;
     }
 

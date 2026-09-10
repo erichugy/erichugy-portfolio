@@ -89,6 +89,14 @@ function ErdTableNode({ data, selected }: NodeProps<TableNode>) {
           {table.columns.map((column) => {
             const isConnected = connectedColumns.has(column.name.toLowerCase());
             const isSelected = column.name === selectedColumn;
+            const allowedValues = column.enumValues ?? column.checkValues;
+            const rowTitle = [
+              column.comment,
+              column.type,
+              allowedValues?.length ? `one of: ${allowedValues.join(", ")}` : null,
+            ]
+              .filter(Boolean)
+              .join(" · ");
 
             return (
               // The canvas reads this attribute on click to resolve which column was
@@ -100,7 +108,7 @@ function ErdTableNode({ data, selected }: NodeProps<TableNode>) {
                   isSelected ? "bg-accent/15 text-heading" : isConnected ? "text-heading" : "text-body"
                 } hover:bg-accent/10`}
                 style={{ height: NODE_ROW_HEIGHT }}
-                title={column.comment ?? column.type}
+                title={rowTitle}
               >
                 <ColumnHandles columnName={column.name} />
 

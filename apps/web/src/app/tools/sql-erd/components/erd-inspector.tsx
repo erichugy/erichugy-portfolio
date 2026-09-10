@@ -142,6 +142,12 @@ function ColumnPanel({
     (name) => name.toLowerCase() === column.name.toLowerCase(),
   );
 
+  // A column is constrained either by an enum type or by a membership CHECK.
+  const allowedValues = column.enumValues ?? column.checkValues;
+  const allowedSource = column.enumValues
+    ? `enum type ${column.type}`
+    : "CHECK constraint";
+
   return (
     <div className="space-y-3">
       <div>
@@ -177,18 +183,17 @@ function ColumnPanel({
         </DetailRow>
       </div>
 
-      {column.enumValues?.length ? (
+      {allowedValues?.length ? (
         <div>
-          <span className={FIELD_LABEL_CLASS}>
-            Allowed values ({column.enumValues.length})
-          </span>
-          <ul className="flex flex-wrap gap-1">
-            {column.enumValues.map((value) => (
+          <span className={FIELD_LABEL_CLASS}>Allowed values ({allowedValues.length})</span>
+          <ul className="mb-1 flex flex-wrap gap-1">
+            {allowedValues.map((value) => (
               <li key={value} className={BADGE_CLASS}>
                 {value}
               </li>
             ))}
           </ul>
+          <span className="font-mono text-[10px] text-muted">from {allowedSource}</span>
         </div>
       ) : null}
 

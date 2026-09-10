@@ -18,6 +18,8 @@ export interface ParsedColumn {
   isAutoIncrement: boolean;
   /** Allowed values, when the column's type is an enum declared in the SQL. */
   enumValues?: readonly string[];
+  /** Allowed values pulled out of a CHECK ... IN / = ANY constraint on the column. */
+  checkValues?: readonly string[];
   comment?: string;
 }
 
