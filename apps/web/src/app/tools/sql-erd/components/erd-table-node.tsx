@@ -53,14 +53,13 @@ function ColumnHandles({ columnName, hidden }: ColumnHandlesProps) {
 }
 
 function ErdTableNode({ data, selected }: NodeProps<TableNode>) {
-  const { table, accent, fileName, collapsed, connectedColumns, selectedColumn, highlighted, dimmed } =
-    data;
+  const { table, accent, fileName, collapsed, connectedColumns, selectedColumn, dimmed } = data;
 
   return (
     <div
       className={`h-full w-full rounded-lg border bg-card font-mono text-[11px] shadow-[0_2px_10px_rgba(12,27,33,0.10)] transition-opacity ${
         selected ? "border-accent ring-2 ring-accent/40" : "border-border"
-      } ${dimmed ? "opacity-35" : "opacity-100"} ${highlighted && !selected ? "ring-1 ring-accent/30" : ""}`}
+      } ${dimmed ? "opacity-35" : "opacity-100"}`}
     >
       <div
         className="flex items-center justify-center gap-2 rounded-t-lg border-b px-3"

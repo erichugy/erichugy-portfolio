@@ -42,22 +42,21 @@ export interface BuildNodesOptions {
   selectedNodeIds: ReadonlySet<string>;
 }
 
-/** Tables directly involved in the current selection, used to focus the canvas. */
+/** Every selected table plus its direct neighbours; null when nothing is selected. */
 function computeHighlightedTables(
   relations: DiagramRelation[],
+  selectedTableIds: ReadonlySet<string>,
   selection: ErdSelection,
 ): Set<string> | null {
-  const tableId = selectionTableId(selection);
-
-  if (tableId) {
-    const highlighted = new Set<string>([tableId]);
+  if (selectedTableIds.size) {
+    const highlighted = new Set<string>(selectedTableIds);
 
     for (const relation of relations) {
-      if (relation.sourceTable === tableId) {
+      if (selectedTableIds.has(relation.sourceTable)) {
         highlighted.add(relation.targetTable);
       }
 
-      if (relation.targetTable === tableId) {
+      if (selectedTableIds.has(relation.targetTable)) {
         highlighted.add(relation.sourceTable);
       }
     }
@@ -94,7 +93,15 @@ export function buildNodes(options: BuildNodesOptions): TableNode[] {
     track(relation.targetTable, relation.targetColumns);
   }
 
-  const highlighted = computeHighlightedTables(relations, options.selection);
+  // The inspector's table and the canvas multi-selection are both "selected".
+  const selectedTableIds = new Set(options.selectedNodeIds);
+  const inspectorTableId = selectionTableId(options.selection);
+
+  if (inspectorTableId) {
+    selectedTableIds.add(inspectorTableId);
+  }
+
+  const highlighted = computeHighlightedTables(relations, selectedTableIds, options.selection);
 
   return tables.map((table) => {
     const collapsed = collapsedTableIds.has(table.id);
@@ -104,9 +111,7 @@ export function buildNodes(options: BuildNodesOptions): TableNode[] {
       id: table.id,
       type: "erdTable" as const,
       position: positions[table.id] ?? { x: 0, y: 0 },
-      selected:
-        options.selectedNodeIds.has(table.id) ||
-        selectionTableId(options.selection) === table.id,
+      selected: selectedTableIds.has(table.id),
       deletable: false,
       // Declared rather than measured so the minimap and auto-layout agree with the DOM.
       width: NODE_WIDTH,
@@ -125,7 +130,6 @@ export function buildNodes(options: BuildNodesOptions): TableNode[] {
           options.selection.kind === "column" && options.selection.tableId === table.id
             ? options.selection.columnName
             : null,
-        highlighted: highlighted?.has(table.id) ?? false,
         dimmed: highlighted ? !highlighted.has(table.id) : false,
       },
     };

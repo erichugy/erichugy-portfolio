@@ -5,7 +5,7 @@ import "./styles.css";
 
 import { ReactFlowProvider } from "@xyflow/react";
 import Link from "next/link";
-import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
+import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   computeLayout,
@@ -385,9 +385,14 @@ export default function SqlErdClient() {
     [deleteRelation, relationsById],
   );
 
+  // A counter rather than a timestamp: two clicks inside the same millisecond would
+  // share a nonce, and the canvas would treat the second as already handled.
+  const focusNonce = useRef(0);
+
   const handleSelectTable = useCallback((tableId: string) => {
+    focusNonce.current += 1;
     setSelection({ kind: "table", id: tableId });
-    setFocusRequest({ tableId, nonce: Date.now() });
+    setFocusRequest({ tableId, nonce: focusNonce.current });
   }, []);
 
   const issuesForActiveFile = useMemo(

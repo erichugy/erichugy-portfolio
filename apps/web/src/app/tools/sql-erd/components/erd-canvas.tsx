@@ -13,18 +13,19 @@ import {
   type EdgeChange,
   type NodeChange,
 } from "@xyflow/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import type { DiagramRelation, NodePosition, ParsedTable } from "@/tools/sql-erd";
+import { NODE_WIDTH, type DiagramRelation, type NodePosition, type ParsedTable } from "@/tools/sql-erd";
 
 import { buildEdges, buildNodes, parseHandleId } from "../lib/erd-graph";
-import type { ErdSelection, RelationPatch, TableNode } from "../sql-erd.types";
+import { selectionKey, type ErdSelection, type RelationPatch, type TableNode } from "../sql-erd.types";
 import ErdRelationEdge from "./erd-relation-edge";
 import ErdTableNode from "./erd-table-node";
 
 const nodeTypes = { erdTable: ErdTableNode };
 const edgeTypes = { erdRelation: ErdRelationEdge };
 const DELETE_KEYS = ["Backspace", "Delete"];
+const NO_SELECTION: ReadonlySet<string> = new Set();
 
 export interface ErdCanvasProps {
   tables: ParsedTable[];
@@ -61,11 +62,21 @@ export default function ErdCanvas({
   onReconnectRelation,
   onDeleteRelation,
 }: ErdCanvasProps) {
-  const { fitView, setCenter } = useReactFlow();
+  const { fitView, getNode, setCenter } = useReactFlow();
   // Positions of nodes mid-drag; committed to the document on drag stop.
   const [dragPositions, setDragPositions] = useState<Record<string, NodePosition>>({});
-  // React Flow owns selection while the pointer is on the canvas (click or marquee).
-  const [selectedNodeIds, setSelectedNodeIds] = useState<ReadonlySet<string>>(new Set());
+
+  // Multi-selection is tagged with the selection it was made against. Anything that
+  // changes the selection from outside the canvas — the file tree, the inspector —
+  // leaves a stale key, which collapses the canvas back to that one table.
+  const [multiSelection, setMultiSelection] = useState<{
+    key: string;
+    ids: ReadonlySet<string>;
+  }>({ key: "none", ids: NO_SELECTION });
+
+  const currentSelectionKey = selectionKey(selection);
+  const selectedNodeIds =
+    multiSelection.key === currentSelectionKey ? multiSelection.ids : NO_SELECTION;
 
   const collapsedSet = useMemo(() => new Set(collapsedTableIds), [collapsedTableIds]);
 
@@ -123,19 +134,28 @@ export default function ErdCanvas({
     return () => window.clearTimeout(timer);
   }, [fitViewSignal, fitView]);
 
+  // Centring is a one-shot: without the nonce guard, and with `positions` as a
+  // dependency, every later document change re-ran it and yanked the view back.
+  const handledFocusNonce = useRef<number | null>(null);
+
   useEffect(() => {
-    if (!focusRequest) {
+    if (!focusRequest || handledFocusNonce.current === focusRequest.nonce) {
       return;
     }
 
-    const target = positions[focusRequest.tableId];
+    handledFocusNonce.current = focusRequest.nonce;
 
-    if (!target) {
+    const node = getNode(focusRequest.tableId);
+
+    if (!node) {
       return;
     }
 
-    setCenter(target.x + 130, target.y + 90, { zoom: 1, duration: 400 });
-  }, [focusRequest, positions, setCenter]);
+    setCenter(node.position.x + NODE_WIDTH / 2, node.position.y + (node.height ?? 0) / 2, {
+      zoom: 1,
+      duration: 400,
+    });
+  }, [focusRequest, getNode, setCenter]);
 
   const handleNodesChange = useCallback((changes: NodeChange<TableNode>[]) => {
     const moved: Record<string, NodePosition> = {};
@@ -161,8 +181,9 @@ export default function ErdCanvas({
       return;
     }
 
-    setSelectedNodeIds((current) => {
-      const next = new Set(current);
+    // Marquee selection: fold the changes into whatever is selected right now.
+    setMultiSelection((current) => {
+      const next = new Set(current.key === currentSelectionKey ? current.ids : NO_SELECTION);
 
       for (const change of changes) {
         if (change.type !== "select") {
@@ -176,9 +197,9 @@ export default function ErdCanvas({
         }
       }
 
-      return next;
+      return { key: currentSelectionKey, ids: next };
     });
-  }, []);
+  }, [currentSelectionKey]);
 
   const handleEdgesChange = useCallback(
     (changes: EdgeChange<Edge>[]) => {
@@ -253,18 +274,43 @@ export default function ErdCanvas({
         onPositionsChange(committed);
       }}
       onNodeClick={(event, node) => {
+        // Resolved here rather than through React Flow's own selection so the
+        // behaviour is the same on every platform and cannot be thrown off by a
+        // modifier key whose keyup was swallowed by a window switch.
+        if (event.metaKey || event.ctrlKey) {
+          const ids = new Set(selectedNodeIds);
+
+          if (ids.has(node.id)) {
+            ids.delete(node.id);
+          } else {
+            ids.add(node.id);
+          }
+
+          const nextSelection: ErdSelection = ids.has(node.id)
+            ? { kind: "table", id: node.id }
+            : { kind: "none" };
+
+          setMultiSelection({ key: selectionKey(nextSelection), ids });
+          onSelectionChange(nextSelection);
+          return;
+        }
+
         const row = (event.target as HTMLElement | null)?.closest?.("[data-erd-column]");
         const columnName = row?.getAttribute("data-erd-column");
+        const nextSelection: ErdSelection = columnName
+          ? { kind: "column", tableId: node.id, columnName }
+          : { kind: "table", id: node.id };
 
-        onSelectionChange(
-          columnName
-            ? { kind: "column", tableId: node.id, columnName }
-            : { kind: "table", id: node.id },
-        );
+        // A plain click replaces the selection outright.
+        setMultiSelection({ key: selectionKey(nextSelection), ids: new Set([node.id]) });
+        onSelectionChange(nextSelection);
       }}
       onNodeDoubleClick={(_event, node) => onToggleCollapsed(node.id)}
       onEdgeClick={(_event, edge) => onSelectionChange({ kind: "relation", id: edge.id })}
-      onPaneClick={() => onSelectionChange({ kind: "none" })}
+      onPaneClick={() => {
+        setMultiSelection({ key: "none", ids: NO_SELECTION });
+        onSelectionChange({ kind: "none" });
+      }}
       onConnect={handleConnect}
       onReconnect={handleReconnect}
       connectionMode={ConnectionMode.Loose}

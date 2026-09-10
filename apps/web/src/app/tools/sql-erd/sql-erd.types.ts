@@ -11,7 +11,7 @@ export interface TableNodeData extends Record<string, unknown> {
   connectedColumns: Set<string>;
   /** Column the inspector is showing, highlighted in the node. */
   selectedColumn: string | null;
-  highlighted: boolean;
+  /** Faded because something else is selected and this table is unrelated to it. */
   dimmed: boolean;
 }
 
@@ -39,6 +39,23 @@ export function selectionTableId(selection: ErdSelection): string | null {
   }
 
   return null;
+}
+
+/** Identity of a selection, used to drop canvas multi-selection when it changes. */
+export function selectionKey(selection: ErdSelection): string {
+  if (selection.kind === "table") {
+    return `table:${selection.id}`;
+  }
+
+  if (selection.kind === "column") {
+    return `column:${selection.tableId}:${selection.columnName}`;
+  }
+
+  if (selection.kind === "relation") {
+    return `relation:${selection.id}`;
+  }
+
+  return "none";
 }
 
 /** Patch applied to a relation from the inspector or by dragging an edge endpoint. */
